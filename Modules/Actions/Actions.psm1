@@ -72,10 +72,11 @@ class ActionsManager {
 
         # Necessary to maintain access within the function scope
         $ThisClass = $this
-        
+
         foreach ($ActionType in $this.Actions) {
 
             Register-ArgumentCompleter -CommandName $ActionType.Name -ParameterName Path -ScriptBlock {
+
                 foreach ($Parameter in $ThisClass.Config.Actions.Terminal.PSObject.Properties) {
                     New-Object -TypeName System.Management.Automation.CompletionResult -ArgumentList @(
                         $Parameter.Name
@@ -92,7 +93,7 @@ class ActionsManager {
         $PathBool = $this.Config.Actions.$ActionType.$Path
 
         if (!$PathBool) {
-            Write-Host `nKey not found.`n
+            Write-Host `nKey not found.`n -ForegroundColor "Yellow"
             return $false
         }
 
