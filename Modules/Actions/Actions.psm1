@@ -79,7 +79,7 @@ class ActionsManager {
 
             Register-ArgumentCompleter -CommandName $ActionType.Name -ParameterName Path -ScriptBlock {
 
-                foreach ($Parameter in $ThisClass.Config.Actions.Terminal.PSObject.Properties) {
+                foreach ($Parameter in $ThisClass.Config.Actions.($ActionType.Name).PSObject.Properties) {
                     New-Object -TypeName System.Management.Automation.CompletionResult -ArgumentList @(
                         $Parameter.Name
                         $Parameter.Name
