@@ -2,8 +2,7 @@
 
 ## Installation
 
-- Clone the repo and add the `Modules` folder to your PSModulePath environment variable
-- You may alternatively copy the contents of the `Modules` folder into another directory within the PSModulePath
+- Clone the repo and add the `Modules` folder to your PSModulePath environment variable.
 
 ## Utilization
 
