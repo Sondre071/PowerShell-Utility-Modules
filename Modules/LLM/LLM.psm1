@@ -4,12 +4,13 @@ class LLM {
     hidden [string] $ApiKey
     [array]$MessageHistory = @()
 
+    # Currently missing support for handling exceptions. As of now it either works or it fails silently.
     LLM() {
 
         $this.ApiUrl = "https://openrouter.ai/api/v1/chat/completions"
 
-        # Make a text file to hold ONLY the api key, and refer to it here.
-        $this.ApiKey = (Get-Content -Path "$Global:HOME/Dev-Utilities/Secrets/OpenRouterApiKey.txt")
+        # Add your OpenRouter api key to the property "apikey" in your config.json
+        $this.APiKey = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json).ApiKey
 
         <# Creates the function used to run this whole thing.
         Example use: LLM "Hi Llama, give me a random color." #>

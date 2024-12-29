@@ -1,11 +1,13 @@
 class ActionsManager {
+
     [PSObject]$Config
     [array]$Actions = @()
 
     ActionsManager() {
+        
         $this.Config = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json
 
-        if ($null -ne $this.Config.Actions.Edit) {
+        if (!!$this.Config.Actions.Edit) {
             Set-Item -Path "Function:Global:Edit" -Value {
                 param ([string]$Path)
 
@@ -13,10 +15,10 @@ class ActionsManager {
                     code $ActionsInstance.Config.Actions.Edit.$Path
                 }
             }
-            $this.Actions += [PSObject]@{"Name" = "Edit"; "Description" = "Edit directory in VSCode." }
+            $this.Actions += [PSObject]@{"Name" = "Edit"; "Description" = "Open directory in VSCode." }
         }
         
-        if ($null -ne $this.Config.Actions.Folder) {
+        if (!!$this.Config.Actions.Folder) {
             Set-Item -Path "Function:Global:Folder" -Value {
                 param ([string]$Path)
 
@@ -28,7 +30,7 @@ class ActionsManager {
             $this.Actions += [PSObject]@{"Name" = "Folder"; "Description" = "Open directory in explorer." }
         }
 
-        if ($null -ne $this.Config.Actions.Run) {
+        if (!!$this.Config.Actions.Run) {
             Set-Item -Path "Function:Global:Run" -Value {
                 param ([string]$Path)
 
@@ -39,7 +41,7 @@ class ActionsManager {
             $this.Actions += [PSObject]@{"Name" = "Run"; "Description" = "Run file." }
         }
 
-        if ($null -ne $this.Config.Actions.Terminal) {
+        if (!!$this.Config.Actions.Terminal) {
             Set-Item -Path "Function:Global:Terminal" -Value { 
                 param ([string]$Path)
 
@@ -51,7 +53,7 @@ class ActionsManager {
             $this.Actions += [PSObject]@{"Name" = "Terminal"; "Description" = "Change to directory location." }
         }
 
-        if ($null -ne $this.Config.Actions.Web -and $null -ne $this.Config.BrowserUrl) {
+        if (!!$this.Config.Actions.Web -and !!$this.Config.BrowserUrl) {
             Set-Item -Path "Function:Global:Web" -Value {
                 param ([string]$Path)
 
