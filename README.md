@@ -1,5 +1,7 @@
 # Sondre's PowerShell Modules
 
+- A collection of Modules I began working on during christmas break of 2024, when I swapped from Bash to PowerShell and fell in love ✨
+
 ## Installation
 
 - Clone the repo and add the `Modules` folder to your PSModulePath environment variable.
