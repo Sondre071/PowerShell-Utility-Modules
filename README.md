@@ -9,11 +9,14 @@
 
 - Instructions will come simply by invoking the name of each module within your terminal.
 
-## LLM
+## Modules
 
-- Capable of sending prompts to OpenRouter, provided you supply your own api key
+### LLM
 
-## Actions
+- Capable of sending prompts to OpenRouter, provided you supply your own api key.
+- Type 'LLM' for further instructions.
+
+### Actions
 
 - Capable of doing simple operations on paths you supply to your config.json file.
 - Supplies the following actions:
