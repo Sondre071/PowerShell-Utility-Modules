@@ -21,7 +21,8 @@ class LLM {
                 Write-Host "Type 'LLM Session' for an interactive chat, or simply 'LLM "myPrompt"' (a string) to send a single message. In both instances the message history is saved." -ForegroundColor "Yellow"
                 Write-Host "Cancel the current streaming response by pressing Q. Cancel and disregard the lastest prompt and response by pressing R." -ForegroundColor "Yellow"
                 Write-Host "Type 'LLM reset' to clear the message history.`n" -ForegroundColor "Yellow"
-            } elseif ($UserInput -eq 'session') {
+            }
+            elseif ($UserInput -eq 'session') {
                 Write-Host `n"LLM chat session. Type 'Info' for extra info" -ForegroundColor "Yellow"
 
                 while ($true) {
@@ -29,14 +30,17 @@ class LLM {
                     
                     if ($UserInput -eq 'info') {
                         Write-Host "`nWhile streaming the response press Q to cancel the current stream.`nPress R to reset, canceling the current stream and wiping the submitted prompt and response.`n" -ForegroundColor "Yellow"
-                    } else {
+                    }
+                    else {
                         $LLM.Run($UserInput)
                     }    
                 }
-            } elseif ($UserInput -eq 'reset') {
+            }
+            elseif ($UserInput -eq 'reset') {
                 $LLM.MessageHistory = @()
                 Write-Host "`nHistory cleared.`n " -ForegroundColor "Yellow"
-            } else {
+            }
+            else {
                 $LLM.Run($UserInput)
             }
 
@@ -138,3 +142,5 @@ class LLM {
 
 # Create an instance
 $LLM = [LLM]::new()
+
+Export-ModuleMember LLM
