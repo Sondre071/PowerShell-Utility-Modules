@@ -15,6 +15,7 @@ class ActionsManager {
             }
             $this.Actions += [PSObject]@{"Name" = "Edit"; "Description" = "Edit directory in VSCode." }
         }
+        
         if ($null -ne $this.Config.Actions.Folder) {
             Set-Item -Path "Function:Global:Folder" -Value {
                 param ([string]$Path)
@@ -26,6 +27,7 @@ class ActionsManager {
             }
             $this.Actions += [PSObject]@{"Name" = "Folder"; "Description" = "Open directory in explorer." }
         }
+
         if ($null -ne $this.Config.Actions.Run) {
             Set-Item -Path "Function:Global:Run" -Value {
                 param ([string]$Path)
