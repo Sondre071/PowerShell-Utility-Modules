@@ -67,8 +67,24 @@ class ActionsManager {
                 foreach ($ActionType in $ActionsInstance.Actions) {
                     Write-Host "$($ActionType.Name):" $ActionType.Description
                 }
-                Write-Host
             }
+        }
+
+        # Necessary to maintain access within the function scope
+        $ThisClass = $this
+        
+        foreach ($ActionType in $this.Actions) {
+
+            Register-ArgumentCompleter -CommandName $ActionType.Name -ParameterName Path -ScriptBlock {
+                foreach ($Parameter in $ThisClass.Config.Actions.Terminal.PSObject.Properties) {
+                    New-Object -TypeName System.Management.Automation.CompletionResult -ArgumentList @(
+                        $Parameter.Name
+                        $Parameter.Name
+                        'ParameterValue'
+                        $Parameter.Name
+                    )
+                }
+            }.GetNewClosure()
         }
     }
 
@@ -81,14 +97,6 @@ class ActionsManager {
         }
 
         return $true
-    }
-
-    [void]ListActions() {
-        Write-Host
-        foreach ($ActionType in $this.Actions) {
-            Write-Host "$($ActionType.Name):" $ActionType.Description
-        }
-        Write-Host
     }
 }
 
