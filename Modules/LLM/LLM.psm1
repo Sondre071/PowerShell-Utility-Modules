@@ -5,14 +5,13 @@ class LLM {
     hidden [string] $Model
     [array]$MessageHistory = @()
 
-    # Currently missing support for handling exceptions. As of now it either works or it fails silently.
     LLM() {
 
         $config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
 
         $this.ApiUrl = $config.LLM.ApiUrl
         $this.ApiKey = $config.LLM.ApiKey
-        $this.Model = $config.LLM.Model
+        $this.Model = $config.LLM.CurrentModel
 
         Set-Item -Path "Function:Global:LLM" -Value {
             param ([string]$UserInput)
@@ -38,9 +37,34 @@ class LLM {
                 Write-Host "`nPress Q to cancel current stream." -ForegroundColor "Yellow"
                 Write-Host "Press R to reset and not save to message history." -ForegroundColor "Yellow"
                 Write-Host "Type 'clear' to clear chat history.`n" -ForegroundColor "Yellow"
+                Write-Host "Type 'model' to see and change current model.`n" -ForegroundColor "Yellow"
+                return $True
+            }
+            'model' {
+                $Config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
+
+                Write-Host "`nCurrent model is: $($this.Model)`n"
+
+                $Count = 1
+                foreach ($Model in $Config.LLM.Models) {
+                    Write-Host "$Count. $Model"
+                    $Count++
+                }
+
+                $ModelNumber = ((Read-Host "`nEnter a number to change the current model") - 1)
+
+                if (($ModelNumber -gt -1) -and ($ModelNumber -lt $Config.LLM.Models.Length)) {
+
+                    $this.Model = $Config.LLM.Models[$ModelNumber]
+                    $Config.LLM.CurrentModel = $Config.LLM.Models[$ModelNumber]
+
+                    Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 5)
+                }
+
                 return $True
             }
         }
+
         return $False
     }
 
@@ -84,12 +108,12 @@ class LLM {
 
         $ModelResponse = ""
 
-        Write-Host # Visual padding
+        Write-Host
 
         # Loop through every line of the stream.
         while (!$Reader.EndOfStream) {
 
-            # If the user presses Q, the loop, and session terminate
+            # If the user presses Q or R, terminates the loop.
             if ([System.Console]::KeyAvailable) {
                 $Key = [System.Console]::ReadKey($true)
 
@@ -131,9 +155,9 @@ class LLM {
         $Stream.Dispose()
         $HttpClient.Dispose()
 
-        Write-Host `n # Visual padding
+        Write-Host `n
 
-        # Message history stays the same if model returnes nothing, or if user resets the session.
+        # Message history stays the same if model returnes nothing, or if user resets the current stream.
         if ($null -ne $ModelResponse) {
             $this.MessageHistory += @{
                 'role' = 'user'; 'content' = $UserInput
