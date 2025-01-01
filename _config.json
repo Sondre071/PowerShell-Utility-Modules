@@ -1,0 +1,17 @@
+{
+  "Actions": {
+    "Paths": {
+      "Edit": {},
+      "Folder": {},
+      "Terminal": {},
+      "Run": {},
+      "Web": {}
+    },
+    "BrowserUrl": ""
+  },
+  "LLM": {
+    "model": "",
+    "modelAlternatives": [],
+    "ApiKey": ""
+  }
+}
