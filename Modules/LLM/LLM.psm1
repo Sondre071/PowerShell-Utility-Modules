@@ -51,7 +51,7 @@ class LLM {
                     $Count++
                 }
 
-                $ModelNumber = ((Read-Host "`nEnter a number to change the current model") - 1)
+                $ModelNumber = ((Read-Host "`nEnter a number") - 1)
 
                 if (($ModelNumber -gt -1) -and ($ModelNumber -lt $Config.LLM.Models.Length)) {
 
@@ -59,6 +59,8 @@ class LLM {
                     $Config.LLM.CurrentModel = $Config.LLM.Models[$ModelNumber]
 
                     Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 5)
+
+                    Write-Host "`n$($Config.LLM.CurrentModel) set as current model.`n" -ForegroundColor "Yellow"
                 }
 
                 return $True
