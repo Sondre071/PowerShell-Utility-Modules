@@ -15,7 +15,7 @@ class LLM {
         Set-Item -Path "Function:Global:LLM" -Value {
             param ([string]$UserInput)
 
-            Write-Host `n"New session. Type 'info' for extra info`n" -ForegroundColor "Yellow"
+            Write-Host `n"New session. Type 'info' for more information.`n" -ForegroundColor "Yellow"
 
             while ($true) {
                 $UserInput = Read-Host "You"
@@ -33,8 +33,8 @@ class LLM {
                 return $True
             }
             'info' {
-                Write-Host "`nPress Q to cancel current stream.`nPress R to cancel and delete current stream from history." -ForegroundColor "Yellow"
-
+                Write-Host "`nPress Q to cancel current stream." -ForegroundColor "Yellow"
+                Write-Host "Press R to reset and not save to message history." -ForegroundColor "Yellow"
                 Write-Host "Type 'clear' to clear chat history.`n" -ForegroundColor "Yellow"
                 return $True
             }
@@ -90,15 +90,18 @@ class LLM {
 
                 if ($Key.Key -eq 'Q' -or $Key.Key -eq 'R') {
 
+                    $OutputMessage = "Stream cancelled."
+
                     if ($Key.Key -eq 'R') {
                         $ModelResponse = $null
+                        $OutputMessage += " Message history is unchanged."
                     }
                     
                     $CancellationTokenSource.Cancel()
                     $Stream.Close()
                     $Reader.Close()
                     
-                    Write-Host -NoNewLine -ForegroundColor DarkGreen `n`n"## Stream cancelled. ##"
+                    Write-Host -NoNewLine "`n`n$OutputMessage" -ForegroundColor "Yellow"
                     Break
                 }
             }
