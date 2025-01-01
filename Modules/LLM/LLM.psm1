@@ -75,6 +75,10 @@ class LLM {
 
         $ResultMessage = $HttpClient.SendAsync($Request, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead, $CancellationToken).GetAwaiter().GetResult()
 
+        if ($ResultMessage.StatusCode -ne 200) {
+            Throw $ResultMessage.StatusCode
+        }
+
         $Stream = $ResultMessage.Content.ReadAsStreamAsync($CancellationToken).GetAwaiter().GetResult()
         $Reader = [System.Io.StreamReader]::new($Stream)
 
