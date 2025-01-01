@@ -12,43 +12,41 @@ class LLM {
         # Add your OpenRouter api key to the property "apikey" in your config.json
         $this.APiKey = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json).ApiKey
 
-        <# Creates the function used to run this whole thing.
-        Example use: LLM "Hi Llama, give me a random color." #>
         Set-Item -Path "Function:Global:LLM" -Value {
             param ([string]$UserInput)
 
-            if ($UserInput -eq 'info' -or !$UserInput) {
-                Write-Host "`nWELCOME TO SONDRE'S LLM MODULE`n" -ForegroundColor "Yellow"
-                Write-Host "Type 'LLM Session' for an interactive chat, or simply 'LLM "myPrompt"' (a string) to send a single message. In both instances the message history is saved." -ForegroundColor "Yellow"
-                Write-Host "Cancel the current streaming response by pressing Q. Cancel and disregard the lastest prompt and response by pressing R." -ForegroundColor "Yellow"
-                Write-Host "Type 'LLM reset' to clear the message history.`n" -ForegroundColor "Yellow"
-            }
-            elseif ($UserInput -eq 'session') {
-                Write-Host `n"LLM chat session. Type 'Info' for extra info" -ForegroundColor "Yellow"
+            Write-Host `n"New session. Type 'info' for extra info`n" -ForegroundColor "Yellow"
 
-                while ($true) {
-                    $UserInput = Read-Host "You"
+            while ($true) {
+                $UserInput = Read-Host "You"
                     
-                    if ($UserInput -eq 'info') {
-                        Write-Host "`nWhile streaming the response press Q to cancel the current stream.`nPress R to reset, canceling the current stream and wiping the submitted prompt and response.`n" -ForegroundColor "Yellow"
-                    }
-                    else {
-                        $LLM.Run($UserInput)
-                    }    
-                }
-            }
-            elseif ($UserInput -eq 'reset') {
-                $LLM.MessageHistory = @()
-                Write-Host "`nHistory cleared.`n " -ForegroundColor "Yellow"
-            }
-            else {
                 $LLM.Run($UserInput)
             }
-
         }
     }
 
+    [boolean] IsCommand($UserInput) {
+        switch ($UserInput) {
+            'clear' {
+                Clear-Host
+                Write-Host "`nHistory cleared.`n" -ForegroundColor "Yellow"
+                return $True
+            }
+            'info' {
+                Write-Host "`nPress Q to cancel current stream.`nPress R to cancel and delete current stream from history." -ForegroundColor "Yellow"
+
+                Write-Host "Type 'clear' to clear chat history.`n" -ForegroundColor "Yellow"
+                return $True
+            }
+        }
+        return $False
+    }
+
     [void] Run($UserInput) {
+        if ($this.IsCommand($UserInput)) {
+            return
+        }
+
         $HttpClient = [System.Net.Http.HttpClient]::new()
 
         $CurrentMessageHistory = $this.MessageHistory
@@ -74,7 +72,6 @@ class LLM {
         $CancellationTokenSource = [System.Threading.CancellationTokenSource]::new()
         $CancellationToken = $CancellationTokenSource.Token
 
-        # No clue what these GET methods are, but they seem to work.
         $ResultMessage = $HttpClient.SendAsync($Request, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead, $CancellationToken).GetAwaiter().GetResult()
 
         $Stream = $ResultMessage.Content.ReadAsStreamAsync($CancellationToken).GetAwaiter().GetResult()
@@ -100,7 +97,7 @@ class LLM {
                     $CancellationTokenSource.Cancel()
                     $Stream.Close()
                     $Reader.Close()
-
+                    
                     Write-Host -NoNewLine -ForegroundColor DarkGreen `n`n"## Stream cancelled. ##"
                     Break
                 }
