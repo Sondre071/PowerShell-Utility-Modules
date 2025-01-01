@@ -7,7 +7,7 @@ class LLM {
 
     # Currently missing support for handling exceptions. As of now it either works or it fails silently.
     LLM() {
-        
+
         $config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
 
         $this.ApiUrl = $config.LLM.ApiUrl
@@ -63,8 +63,7 @@ class LLM {
         $Request.RequestUri = $this.ApiUrl
         $Request.Content = [System.Net.Http.StringContent]::new(
             (@{
-                #'model'    = "meta-llama/llama-3.3-70b-instruct"
-                'model'    = "deepseek/deepseek-chat"
+                'model'    = $this.model
                 'messages' = $CurrentMessageHistory
                 'stream'   = 'true'
             } | ConvertTo-Json),
