@@ -43,7 +43,7 @@ class LLM {
             'model' {
                 $Config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
 
-                Write-Host "`nCurrent model is: $($this.Model)`n"
+                Write-Host "`nCurrent model is: $($this.Model)`n" -ForegroundColor "Yellow"
 
                 $Count = 1
                 foreach ($Model in $Config.LLM.Models) {
@@ -51,7 +51,8 @@ class LLM {
                     $Count++
                 }
 
-                $ModelNumber = ((Read-Host "`nEnter a number") - 1)
+                # TODO: This breaks if anything other than a number is returned, whoops
+                $ModelNumber = ((Read-Host "`nEnter a number to switch models") - 1)
 
                 if (($ModelNumber -gt -1) -and ($ModelNumber -lt $Config.LLM.Models.Length)) {
 
@@ -61,6 +62,8 @@ class LLM {
                     Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 5)
 
                     Write-Host "`n$($Config.LLM.CurrentModel) set as current model.`n" -ForegroundColor "Yellow"
+                } else {
+                    Write-Host "`nCurrent model unchanged.`n" -ForegroundColor "Yellow"
                 }
 
                 return $True
