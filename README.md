@@ -5,6 +5,7 @@
 ## Installation
 
 - Clone the repo and add the `Modules` folder to your PSModulePath environment variable.
+- Add data of your choice into the 'config.json' file and remove the underscore from its name.
 
 ## Utilization
 
@@ -15,7 +16,7 @@
 ### LLM
 
 - Capable of sending prompts to OpenRouter, provided you supply your own api key.
-- Type 'LLM' for further instructions.
+- Initiated by simply typing 'LLM'.
 
 ### Actions
 
