@@ -3,7 +3,7 @@ class LLM {
     hidden [string] $ApiUrl
     hidden [string] $ApiKey
     hidden [string] $Model
-    [array]$MessageHistory = @()
+    [array]$MessageHistory
 
     LLM() {
 
@@ -16,6 +16,7 @@ class LLM {
         Set-Item -Path "Function:Global:LLM" -Value {
             param ([string]$UserInput)
 
+            $LLM.MessageHistory = @()
             Write-Host `n"New session. Type 'info' for more information.`n" -ForegroundColor "Yellow"
 
             while ($true) {
@@ -30,7 +31,8 @@ class LLM {
         switch ($UserInput) {
             'clear' {
                 Clear-Host
-                Write-Host "`nHistory cleared.`n" -ForegroundColor "Yellow"
+                $this.MessageHistory = @()
+                Write-Host "`nSession history cleared.`n" -ForegroundColor "Yellow"
                 return $True
             }
             'info' {
@@ -52,7 +54,11 @@ class LLM {
                 }
 
                 # TODO: This breaks if anything other than a number is returned, whoops
-                $ModelNumber = ((Read-Host "`nEnter a number to switch models") - 1)
+                $ModelNumber = (Read-Host "`nEnter a number to switch models")
+
+                if ($ModelNumber -is [int]) {
+                    $ModelNumber--
+                }
 
                 if (($ModelNumber -gt -1) -and ($ModelNumber -lt $Config.LLM.Models.Length)) {
 
