@@ -40,24 +40,6 @@ class ActionsManager {
                 Write-Host
             }
         }
-
-        # Necessary to maintain access within the function scope
-        $ThisClass = $this
-
-        # foreach ($ActionType in $this.Actions) {
-
-        #     Register-ArgumentCompleter -CommandName $ActionType.Name -ParameterName Path -ScriptBlock {
-
-        #         foreach ($Parameter in $ThisClass.Config.Actions.Paths.($ActionType.Name).PSObject.Properties) {
-        #             New-Object -TypeName System.Management.Automation.CompletionResult -ArgumentList @(
-        #                 $Parameter.Name
-        #                 $Parameter.Name
-        #                 'ParameterValue'
-        #                 $Parameter.Name
-        #             )
-        #         }
-        #     }.GetNewClosure()
-        # }
     }
 }
 
