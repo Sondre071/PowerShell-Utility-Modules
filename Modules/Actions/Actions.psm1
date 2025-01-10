@@ -16,9 +16,9 @@ class ActionsManager {
                 $Group = $ActionsInstance.Config.Actions.FunctionGroups.$GroupName
                 $FunctionValue = $Group.Function
 
-                $Path = $Group.Parameters.$PathKey
+                $Parameter = $Group.Parameters.$PathKey
 
-                if (!$Path) {
+                if (!$Parameter) {
                     Write-Host "`nKey not found.`n"
                     return
                 }
