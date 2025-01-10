@@ -1,20 +1,20 @@
 {
   "Actions": {
-    "Paths": {
-      "Edit": {},
-      "Folder": {},
-      "Terminal": {},
-      "Run": {},
-      "Web": {}
-    },
-    "BrowserUrl": ""
+    "FunctionGroups": {
+      "Print": {
+        "Description": "This is an example function!",
+        "Function": "Write-Host $Parameter",
+        "Parameters": {
+          "Hello": "Hello, World!",
+          "PI": "Pi is 3,14!"
+        }
+      }
+    }
   },
   "LLM": {
     "model": "",
     "modelAlternatives": [],
     "ApiKey": ""
   },
-  "Sync": {
-    
-  }
+  "Sync": {}
 }
