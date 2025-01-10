@@ -1,7 +1,7 @@
 class ActionsManager {
 
-    [PSObject]$Config
-    [array]$Actions = @()
+    [PSObject] $Config
+    [array] $Actions = @()
 
     ActionsManager() {
         
@@ -14,20 +14,27 @@ class ActionsManager {
 
                 $GroupName = $MyInvocation.MyCommand.Name
                 $Group = $ActionsInstance.Config.Actions.FunctionGroups.$GroupName
+
                 $FunctionValue = $Group.Function
 
                 $Parameter = $Group.Parameters.$PathKey
 
+                if (!$PathKey) {
+                    $ActionsInstance.ListKeys($GroupName)
+                    return
+                }
+                
                 if (!$Parameter) {
                     Write-Host "`nKey not found.`n"
                     return
                 }
-
+                
                 Invoke-Expression $FunctionValue
+
             }
 
             if ($Group.Value.Description) {
-                $this.Actions += [PSObject]@{"Name" = $Group.Name; "Description" = "$($Group.Value.Description)"}
+                $this.Actions += [PSObject]@{"Name" = $Group.Name; "Description" = "$($Group.Value.Description)" }
             }
         }
 
@@ -40,6 +47,17 @@ class ActionsManager {
                 Write-Host
             }
         }
+    }
+
+    [void] ListKeys($GroupName) {
+        $GroupParameters = $this.Config.Actions.FunctionGroups.$GroupName.Parameters
+        
+        Write-Host
+        foreach ($Parameter in $GroupParameters.PSObject.Properties) {
+            Write-Host $Parameter.Name
+        }
+
+        Write-Host
     }
 }
 
