@@ -4,12 +4,12 @@ class ActionsManager {
     [array] $Actions = @()
 
     ActionsManager() {
-        
+
         $this.Config = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json -Depth 7
 
         foreach ($Group in $this.Config.Actions.FunctionGroups.PSObject.Properties) {
 
-            #Create the functions defined in config.json
+            #Create the functions defined in config.json.
             Set-Content -Path "Function:Global:$($Group.Name)" -Value {
                 param([string]$PathKey)
 
