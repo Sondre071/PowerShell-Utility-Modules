@@ -9,6 +9,7 @@ class ActionsManager {
 
         foreach ($Group in $this.Config.Actions.FunctionGroups.PSObject.Properties) {
 
+            #Create the functions defined in config.json
             Set-Content -Path "Function:Global:$($Group.Name)" -Value {
                 param([string]$PathKey)
 
