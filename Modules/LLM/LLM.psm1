@@ -38,7 +38,7 @@ class LLM {
             'info' {
                 Write-Host "`nPress Q to cancel current stream." -ForegroundColor "Yellow"
                 Write-Host "Press R to reset and not save to message history." -ForegroundColor "Yellow"
-                Write-Host "Type 'clear' to clear chat history.`n" -ForegroundColor "Yellow"
+                Write-Host "Type 'clear' to clear chat history." -ForegroundColor "Yellow"
                 Write-Host "Type 'model' to see and change current model.`n" -ForegroundColor "Yellow"
                 return $True
             }
