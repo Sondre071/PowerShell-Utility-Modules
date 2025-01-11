@@ -54,18 +54,36 @@ class LLM {
                     $Count++
                 }
 
+                Write-Host "$Count. Add new model" -ForegroundColor "White"
+
                 $ModelNumber = (Read-Host "`nEnter a number to switch models")
 
-                if (($ModelNumber -match "^-?[\d]+$") -and ($ModelNumber -gt 0) -and (($ModelNumber - 1) -lt $Config.LLM.Models.Length)) {
-                    $ModelNumber = ($ModelNumber - 1)
+                if (($ModelNumber -match "^-?[\d]+$") -and ($ModelNumber -gt 0) -and ($ModelNumber -le $Count)) {
 
-                    $this.Model = $Config.LLM.Models[$ModelNumber]
-                    $Config.LLM.CurrentModel = $Config.LLM.Models[$ModelNumber]
-                    Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 5)
-                    
-                    Write-Host "`n$($Config.LLM.Models[$ModelNumber]) set as current model."
+                    $NewModel = ""
 
-                } else {
+                    # Switch to, and add the model to the models array.
+                    if ($ModelNumber -eq $Count) {
+
+                        $NewModel = (Read-Host "Enter new model")
+                        $Config.LLM.Models += $NewModel
+
+                    # Only switch to model.
+                    }
+                    else {
+
+                        # Account for zero-based indexing.
+                        $NewModel = $Config.LLM.Models[$ModelNumber - 1]
+                    }
+
+                    $Config.LLM.CurrentModel = $NewModel
+                    $this.Model = $NewModel
+
+                    Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 7)
+                        
+                    Write-Host "`n$NewModel set as current model.`n" -ForegroundColor "Yellow"
+                }
+                else {
                     Write-Host "`nCurrent model unchanged.`n" -ForegroundColor "Yellow"
                 }
 
