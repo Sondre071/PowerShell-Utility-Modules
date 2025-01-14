@@ -68,8 +68,8 @@ class LLM {
                         $NewModel = (Read-Host "Enter new model")
                         $Config.LLM.Models += $NewModel
 
-                    # Only switch to model.
                     }
+                    # Only switch to model.
                     else {
 
                         # Account for zero-based indexing.

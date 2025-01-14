@@ -1,46 +1,42 @@
-$Menu = @("Hi1", "Hi2", "Hi3", "Hi4", "Hi5")
+Function RenderMenu($CurrentIndex, $MenuItems, $StartingRow) {
+    [System.Console]::SetCursorPosition(0, $StartingRow)
 
-Function RenderMenu($OldIndex, $Direction) {
-    $NewIndex = $OldIndex
-
-    # 38 is up arrow, 40 is down arrow
-    if ($Null -ne $Direction) {
-        if ($Direction -eq 38) {
-            $NewIndex--
-        }
-        elseif ($Direction -eq 40) {
-            $NewIndex++
-        }
+    for ($i = 0; $i -lt $MenuItems.Count; $i++) {
+        Write-Host ">  $($MenuItems[$i])" -ForegroundColor "$($i -eq $CurrentIndex ? 'Yellow' : 'Gray')"
     }
-
-    for ($i = 1; $i -le $Menu.Count; $i++) {
-        if ($NewIndex -eq $i) {
-            Write-Host "`t$($Menu[$i])" -ForegroundColor "Yellow"
-        }
-        else {
-            Write-Host "`t$($Menu[$i])"
-        }
-    }
-
-    $MenuHeight = $Menu.Count
-
-    return @($NewIndex, $MenuHeight)
 }
 
-Function Test1() {
+Function Menu($MenuList) {
     [System.Console]::CursorVisible = $False
-    $CurrentIndex, $MenuHeight = RenderMenu -OldIndex 1 -Direction $Null
+
+    $CurrentIndex = 0
+    $StartingRow = [System.Console]::CursorTop
+    $MenuItems = $MenuList
+
+    RenderMenu -Currentindex $CurrentIndex -MenuItems $MenuItems -StartingRow $StartingRow
 
     While ($True) {
-        $KeyPress = $Null
-        Do {
-            if ([Console]::KeyAvailable) {
-                $KeyPress = (Get-Host).UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").VirtualKeyCode
+        if ([Console]::KeyAvailable) {
+            $KeyPress = (Get-Host).UI.RawUI.ReadKey("NoEcho, IncludeKeyDown").VirtualKeyCode
+            Switch ($KeyPress) {
+                38 {
+                    #Up Arrow
+                    $CurrentIndex = [Math]::Max(0, $CurrentIndex - 1)
+                    Break
+                }
+                40 {
+                    #Down Arrow
+                    $CurrentIndex = [Math]::Min($MenuItems.Count - 1, $CurrentIndex + 1)
+                    Break
+                }
+                13 {
+                    #Enter - commit action
+                    Return
+                }
             }
-        } While ($Null -eq $KeyPress)
 
-        [System.Console]::SetCursorPosition(0, [Math]::Max(0, [Console]::CursorTop - $MenuHeight))
-
-        $CurrentIndex, $MenuHeight = RenderMenu -OldIndex $CurrentIndex -Direction $KeyPress
+            # Re-render menu
+            RenderMenu -CurrentIndex $CurrentIndex -MenuItems $MenuItems -StartingRow $StartingRow
+        }
     }
 }
