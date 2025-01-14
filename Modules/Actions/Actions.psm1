@@ -1,51 +1,41 @@
 Import-Module PUM-Utils
 
-class ActionsManager {
+[PSObject]$Config = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json -Depth 7
+[array]$Actions = @()
 
-    [PSObject] $Config
-    [array] $Actions = @()
+foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
 
-    ActionsManager() {
+    #Create the functions defined in config.json.
+    Set-Content -Path "Function:Global:$($Group.Name)" -Value {
+        param([string]$PathKey)
 
-        $this.Config = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json -Depth 7
+        $Group = $Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
 
-        foreach ($Group in $this.Config.Actions.FunctionGroups.PSObject.Properties) {
+        $ParameterKey = (!!$PathKey ? $PathKey : (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)))
 
-            #Create the functions defined in config.json.
-            Set-Content -Path "Function:Global:$($Group.Name)" -Value {
-                param([string]$PathKey)
-
-                $Group = $ActionsInstance.Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
-
-                $ParameterKey = (!!$PathKey ? $PathKey : (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)))
-
-                $Parameter = $Group.Parameters.$ParameterKey
+        $Parameter = $Group.Parameters.$ParameterKey
                 
-                if (!$Parameter) {
-                    Write-Host "Key not found."
-                    return
-                }
+        if (!$Parameter) {
+            Write-Host "Key not found."
+            return
+        }
                 
-                Invoke-Expression $Group.Function
-            }
+        Invoke-Expression $Group.Function
+    }
 
-            if ($Group.Value.Description) {
-                $this.Actions += [PSObject]@{"Name" = $Group.Name; "Description" = "$($Group.Value.Description)" }
-            }
-        }
-
-        if ($this.Actions) {
-            Set-Item -Path "Function:Global:Actions" -Value {
-                Write-Host
-                foreach ($ActionType in $ActionsInstance.Actions) {
-                    Write-Host "$($ActionType.Name):" $ActionType.Description
-                }
-                Write-Host
-            }
-        }
+    if ($Group.Value.Description) {
+        $Actions += [PSObject]@{"Name" = $Group.Name; "Description" = "$($Group.Value.Description)" }
     }
 }
 
-$ActionsInstance = [ActionsManager]::new()
+if ($Actions) {
+    Set-Item -Path "Function:Global:Actions" -Value {
+        Write-Host
+        foreach ($ActionType in $Actions) {
+            Write-Host "$($ActionType.Name):" $ActionType.Description
+        }
+        Write-Host
+    }
+}
 
 Export-ModuleMember Actions, Edit, Folder, Run, Terminal, Web
