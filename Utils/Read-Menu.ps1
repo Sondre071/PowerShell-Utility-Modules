@@ -10,7 +10,7 @@ Function Write-Menu($CurrentIndex, $MenuArray, $StartingRow) {
 
         $ForegroundColor = "$($i -eq $CurrentIndex ? 'Yellow' : 'Gray')"
         Write-Host ">  $($MenuArray[$i])" -ForegroundColor $ForegroundColor
-
+        
     }
 }
 
@@ -38,6 +38,7 @@ While ($True) {
             }
             13 {
                 #Enter - return item
+                [System.Console]::CursorVisible = $True
                 Return $MenuArray[$CurrentIndex]
             }
         }

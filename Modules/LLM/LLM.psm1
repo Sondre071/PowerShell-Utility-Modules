@@ -1,8 +1,10 @@
+Import-Module PMU-Utils
+
 $config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
 
-[string]$ApiUrl = $config.LLM.ApiUrl
-[string]$ApiKey = $config.LLM.ApiKey
-[string]$Model = $config.LLM.CurrentModel
+$ApiUrl = $config.LLM.ApiUrl
+$ApiKey = $config.LLM.ApiKey
+$Model = $config.LLM.CurrentModel
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 Function LLM() {
@@ -36,47 +38,20 @@ Function IsCommand($UserInput) {
 
             Write-Host "`nCurrent model is: $($Model)`n" -ForegroundColor "Yellow"
 
-            $Count = 1
-            foreach ($Model in $Config.LLM.Models) {
-                Write-Host "$Count. $Model"
-                $Count++
-            }
+            $NewModelOption = Read-Menu -MenuArray ($Config.LLM.Models + 'Add new model')
 
-            Write-Host "$Count. Add new model" -ForegroundColor "White"
+            $NewModel = ($NewModelOption -eq 'Add new model') ? (Read-Host "`nAdd new model") : $NewModelOption
 
-            $ModelNumber = (Read-Host "`nEnter a number to switch models")
+            $Config.LLM.CurrentModel = $NewModel
+            $Model = $NewModel
 
-            if (($ModelNumber -match "^-?[\d]+$") -and ($ModelNumber -gt 0) -and ($ModelNumber -le $Count)) {
-
-                $NewModel = ""
-
-                # Switch to, and add the model to the models array.
-                if ($ModelNumber -eq $Count) {
-
-                    $NewModel = (Read-Host "Enter new model")
-                    $Config.LLM.Models += $NewModel
-
-                }
-                # Only switch to model.
-                else {
-
-                    # Account for zero-based indexing.
-                    $NewModel = $Config.LLM.Models[$ModelNumber - 1]
-                }
-
-                $Config.LLM.CurrentModel = $NewModel
-                $Model = $NewModel
-
-                Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 7)
+            Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 7)
                         
-                Write-Host "`n$NewModel set as current model.`n" -ForegroundColor "Yellow"
-            }
-            else {
-                Write-Host "`nCurrent model unchanged.`n" -ForegroundColor "Yellow"
-            }
+            Write-Host "`n$NewModel set as current model.`n" -ForegroundColor "Yellow"
 
             return $True
         }
+
     }
 
     return $False
