@@ -42,8 +42,12 @@ Function IsCommand($UserInput) {
 
             $NewModel = ($NewModelOption -eq 'Add new model') ? (Read-Host "`nAdd new model") : $NewModelOption
 
-            $Config.LLM.CurrentModel = $NewModel
             $Model = $NewModel
+            $Config.LLM.CurrentModel = $NewModel
+
+            if ($Config.LLM.Models -notcontains $NewModel) {
+                $Config.LLM.Models += $NewModel
+            }
 
             Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 7)
                         
