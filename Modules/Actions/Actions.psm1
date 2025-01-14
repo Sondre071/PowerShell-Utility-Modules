@@ -1,3 +1,5 @@
+Import-Module PUM-Utils
+
 class ActionsManager {
 
     [PSObject] $Config
@@ -13,25 +15,18 @@ class ActionsManager {
             Set-Content -Path "Function:Global:$($Group.Name)" -Value {
                 param([string]$PathKey)
 
-                $GroupName = $MyInvocation.MyCommand.Name
-                $Group = $ActionsInstance.Config.Actions.FunctionGroups.$GroupName
+                $Group = $ActionsInstance.Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
 
-                $FunctionValue = $Group.Function
+                $ParameterKey = (!!$PathKey ? $PathKey : (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)))
 
-                $Parameter = $Group.Parameters.$PathKey
-
-                if (!$PathKey) {
-                    $ActionsInstance.ListKeys($GroupName)
-                    return
-                }
+                $Parameter = $Group.Parameters.$ParameterKey
                 
                 if (!$Parameter) {
-                    Write-Host "`nKey not found.`n"
+                    Write-Host "Key not found."
                     return
                 }
                 
-                Invoke-Expression $FunctionValue
-
+                Invoke-Expression $Group.Function
             }
 
             if ($Group.Value.Description) {
@@ -48,17 +43,6 @@ class ActionsManager {
                 Write-Host
             }
         }
-    }
-
-    [void] ListKeys($GroupName) {
-        $GroupParameters = $this.Config.Actions.FunctionGroups.$GroupName.Parameters
-        
-        Write-Host
-        foreach ($Parameter in $GroupParameters.PSObject.Properties) {
-            Write-Host $Parameter.Name
-        }
-
-        Write-Host
     }
 }
 
