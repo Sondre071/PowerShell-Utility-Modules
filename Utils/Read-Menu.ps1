@@ -3,8 +3,13 @@ param (
     [string[]]$MenuArray
 )
 
-Function Write-Menu($CurrentIndex, $MenuArray, $StartingRow) {
-    if ($Null -ne $StartingRow) { [System.Console]::SetCursorPosition(0, $StartingRow) }
+Function Write-Menu() {
+    param(
+        [int]$CurrentIndex,
+        [string[]]$MenuArray,
+        [int]$StartingRow
+    )
+    [System.Console]::SetCursorPosition(0, $StartingRow)
 
     for ($i = 0; $i -lt $MenuArray.Count; $i++) {
 

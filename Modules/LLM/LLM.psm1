@@ -1,72 +1,47 @@
 Import-Module PMU-Utils
 
-$config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
-
-$ApiUrl = $config.LLM.ApiUrl
-$ApiKey = $config.LLM.ApiKey
-$Model = $config.LLM.CurrentModel
+$Config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
+$ApiKey = $Config.LLM.ApiKey
+$ApiUrl = $Config.LLM.ApiUrl
+$Model = $Config.LLM.CurrentModel
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 Function LLM() {
-    Write-Host `n"New session. Type 'info' for more information.`n" -ForegroundColor "Yellow"
+    $Option = Read-Menu -MenuArray @('New session', 'Info', 'Model')
 
-    while ($true) {
-        $UserInput = Read-Host "You"
+    switch ($Option) {
+        'New session' {
 
-        Run($UserInput)
-    }
-}
+            While ($True) {
+                $UserInput = Read-Host "You"
 
-Function IsCommand($UserInput) {
-    switch ($UserInput) {
-        'clear' {
-            Clear-Host
-            $MessageHistory.Clear()
-            Write-Host "`nSession history cleared.`n" -ForegroundColor "Yellow"
-            return $True
-        }
-        'info' {
-            Write-Host "`nPress Q to cancel current stream." -ForegroundColor "Yellow"
-            Write-Host "Press R to reset and not save to message history." -ForegroundColor "Yellow"
-            Write-Host "Type 'clear' to clear chat history." -ForegroundColor "Yellow"
-            Write-Host "Type 'model' to add or change models.`n" -ForegroundColor "Yellow"
-            return $True
-        }
-             
-        'model' {
-            $Config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
+                $HttpClient = [System.Net.Http.HttpClient]::new()
 
-            Write-Host "`nCurrent model is: $($Model)`n" -ForegroundColor "Yellow"
+                $Stream = SendRequest -HttpClient $HttpClient -UserInput $UserInput
 
-            $NewModelOption = Read-Menu -MenuArray ($Config.LLM.Models + 'Add new model')
+                $ModelResponse = StreamResponse($Stream)
 
-            $NewModel = ($NewModelOption -eq 'Add new model') ? (Read-Host "`nAdd new model") : $NewModelOption
-
-            $Model = $NewModel
-            $Config.LLM.CurrentModel = $NewModel
-
-            if ($Config.LLM.Models -notcontains $NewModel) {
-                $Config.LLM.Models += $NewModel
+                SaveToMessageHistory($ModelResponse)
             }
 
-            Set-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") -Value ($Config | ConvertTo-Json -Depth 7)
-                        
-            Write-Host "`n$NewModel set as current model.`n" -ForegroundColor "Yellow"
-
-            return $True
+            Break;
         }
-
+        'Info' {
+            Write-Host "yeah...2"
+            Break;
+        }
+        'Model' {
+            Write-Host "yeah...3"
+            Break;
+        }
     }
-
-    return $False
 }
 
-Function Run($UserInput) {
-    if (IsCommand($UserInput)) {
-        return
-    }
-
-    $HttpClient = [System.Net.Http.HttpClient]::new()
+Function SendRequest() {
+    param(
+        [System.Net.Http.HttpClient]$HttpClient,
+        [string]$UserInput
+    )
 
     $CurrentMessageHistory = $MessageHistory
     $CurrentMessageHistory += @{
@@ -97,6 +72,11 @@ Function Run($UserInput) {
     }
 
     $Stream = $ResultMessage.Content.ReadAsStreamAsync($CancellationToken).GetAwaiter().GetResult()
+
+    return $Stream
+}
+
+Function StreamResponse($Stream) {
     $Reader = [System.Io.StreamReader]::new($Stream)
 
     $ModelResponse = ""
@@ -144,11 +124,16 @@ Function Run($UserInput) {
         }
     }
 
+    Write-Host `n
+
     $Reader.Dispose()
     $Stream.Dispose()
     $HttpClient.Dispose()
 
-    Write-Host `n
+    return $ModelResponse
+}
+
+Function SaveToMessageHistory($ModelResponse) {
 
     # Message history stays the same if model returnes nothing, or if user resets the current stream.
     if ($null -ne $ModelResponse) {

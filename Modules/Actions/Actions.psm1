@@ -28,7 +28,7 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
     }
 }
 
-if ($Actions) {
+if ($Actions.Count) {
     Set-Item -Path "Function:Global:Actions" -Value {
         Write-Host
         foreach ($ActionType in $Actions) {
