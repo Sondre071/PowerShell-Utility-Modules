@@ -12,6 +12,8 @@ Function LLM() {
     switch ($Option) {
         'New session' {
 
+            $MessageHistory.Clear()
+
             While ($True) {
                 $UserInput = Read-Host "You"
 
@@ -27,11 +29,12 @@ Function LLM() {
             Break;
         }
         'Info' {
-            Write-Host "yeah...2"
+            Write-Host "Press Q to stop the current response.`nPress R to stop and not save the current response to message history." -ForegroundColor "Yellow"
+
             Break;
         }
         'Model' {
-            Write-Host "yeah...3"
+            Write-Host "yeah..."
             Break;
         }
     }
