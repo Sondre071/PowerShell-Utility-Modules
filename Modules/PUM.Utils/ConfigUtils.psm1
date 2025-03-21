@@ -4,13 +4,13 @@ function Get-Config {
     )
 
     if (-not (Test-Path -Path $ConfigPath)) {
-        throw "Config file not found at $ConfigPath"
+        throw "Config file not found at $ConfigPath."
     }
 
     try {
         return Get-Content -Path $ConfigPath -Raw | ConvertFrom-Json -Depth 7
     } catch {
-        throw "Failed to parse config file: $_"
+        throw "Failed to parse config file: $_."
     }
 }
 
