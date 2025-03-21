@@ -1,5 +1,4 @@
 function Read-Menu {
-
     param (
         [Parameter(Mandatory = $true)]
         [string[]]$MenuArray

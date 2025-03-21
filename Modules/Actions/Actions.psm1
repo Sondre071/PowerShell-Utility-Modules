@@ -1,6 +1,3 @@
-Import-Module "$PSScriptRoot\..\PUM.Utils\ConfigUtils.psm1" -Function Get-Config
-Import-Module "$PSScriptRoot\..\PUM.Utils\MenuUtils.psm1" -Function Read-Menu
-
 [PSObject]$Config = Get-Config
 [Array]$Actions = @()
 
