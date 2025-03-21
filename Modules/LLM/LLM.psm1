@@ -1,5 +1,5 @@
-Import-Module PUM.Utils
 Import-Module "$PSScriptRoot\..\PUM.Utils\ConfigUtils.psm1" -Function Get-Config
+Import-Module "$PSScriptRoot\..\PUM.Utils\MenuUtils.psm1" -Function Read-Menu
 
 $Config = Get-Config
 $ApiKey = $Config.LLM.ApiKey
@@ -88,7 +88,7 @@ Function StreamResponse($Stream) {
     Write-Host
 
     # Loop through every line of the stream.
-    while (!$Reader.EndOfStream) {
+    while (-not $Reader.EndOfStream) {
 
         # If the user presses Q or R, terminates the loop.
         if ([System.Console]::KeyAvailable) {
