@@ -1,3 +1,5 @@
+# This syntax is used to register options for autocomplete.
+
 $Config = ((Get-Content -Path "$PSScriptRoot/config.json") | ConvertFrom-Json).Actions.FunctionGroups
 
 Write-Host $Config
