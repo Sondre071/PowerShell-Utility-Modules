@@ -14,27 +14,24 @@ function Read-Menu {
         [System.Console]::SetCursorPosition(0, $StartingRow)
 
         for ($i = 0; $i -lt $MenuArray.Count; $i++) {
-            $ForegroundColor = "$($i -eq $CurrentIndex ? 'Yellow' : 'Gray')"
-            Write-Host ">  $($MenuArray[$i])" -ForegroundColor $ForegroundColor
+            $color = if ($i -eq $CurrentIndex) { 'Yellow' } else { 'Gray' }
+            Write-Host ">  $($MenuArray[$i])" -ForegroundColor $color
         }
 
         if ([Console]::KeyAvailable) {
-            $KeyPress = (Get-Host).UI.RawUI.ReadKey("NoEcho, IncludeKeyDown").VirtualKeyCode
+            $keyInfo = [Console]::ReadKey($true)
 
-            Switch ($KeyPress) {
-                38 {
-                    #Up Arrow
+            switch ($keyInfo.Key) {
+                { $_ -in "UpArrow", "K" } {
                     $CurrentIndex = [Math]::Max(0, $CurrentIndex - 1)
                     Break
                 }
-                40 {
-                    #Down Arrow
+                { $_ -in "DownArrow", "J" } {
                     $CurrentIndex = [Math]::Min($MenuArray.Count - 1, $CurrentIndex + 1)
                     Break
                 }
-                13 {
-                    #Enter - return item
-                    [System.Console]::CursorVisible = $True
+                { $_ -in "Enter", "L" } {
+                    [System.Console]::CursorVisible = $true
                     Return $MenuArray[$CurrentIndex]
                 }
             }
