@@ -2,18 +2,16 @@ Import-Module PUM.Utils
 Import-Module "$PSScriptRoot\..\PUM.Utils\ConfigUtils.psm1" -Function Get-Config
 
 [PSObject]$Config = Get-Config
-[array]$Actions = @()
+[Array]$Actions = @()
 
 foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
 
     #Create the functions defined in config.json.
-    Set-Content -Path "Function:Global:$($Group.Name)" -Value {
+    $ScriptBlock = {
         param([string]$PathKey)
 
         $Group = $Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
-
         $ParameterKey = if ($PathKey) { $Pathkey } else { (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)) }
-
         $Parameter = $Group.Parameters.$ParameterKey
                 
         if (-not $Parameter) {
@@ -23,6 +21,8 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
                 
         Invoke-Expression $Group.Function
     }
+
+    Set-Item -Path "Function:Global:$($Group.Name)" -Value $ScriptBlock
 
     if ($Group.Value.Description) {
         $Actions += [PSCustomObject]@{
