@@ -12,11 +12,11 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
 
         $Group = $Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
 
-        $ParameterKey = (!!$PathKey ? $PathKey : (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)))
+        $ParameterKey = if ($PathKey) { $Pathkey } else { (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)) }
 
         $Parameter = $Group.Parameters.$ParameterKey
                 
-        if (!$Parameter) {
+        if (-not $Parameter) {
             Write-Host "Key not found."
             return
         }
@@ -25,7 +25,10 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
     }
 
     if ($Group.Value.Description) {
-        $Actions += [PSObject]@{"Name" = $Group.Name; "Description" = "$($Group.Value.Description)" }
+        $Actions += [PSCustomObject]@{
+            Name        = $Group.Name
+            Description = $Group.Value.Description
+        }    
     }
 }
 
