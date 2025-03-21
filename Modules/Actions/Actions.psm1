@@ -1,5 +1,5 @@
-Import-Module PUM.Utils
 Import-Module "$PSScriptRoot\..\PUM.Utils\ConfigUtils.psm1" -Function Get-Config
+Import-Module "$PSScriptRoot\..\PUM.Utils\MenuUtils.psm1" -Function Read-Menu
 
 [PSObject]$Config = Get-Config
 [Array]$Actions = @()
@@ -10,7 +10,7 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
     $ScriptBlock = {
         param(
             [string]$PathKey
-        )
+            )
 
         $Group = $Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
         $ParameterKey = if ($PathKey) { $Pathkey } else { (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)) }
@@ -24,7 +24,7 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
         Invoke-Expression $Group.Function
     }
 
-    Set-Item -Path "Function:Global:$($Group.Name)" -Value $ScriptBlock
+    New-Item -Path "Function:Global:$($Group.Name)" -Value $ScriptBlock
 
     if ($Group.Value.Description) {
         $Actions += [PSCustomObject]@{
@@ -35,7 +35,7 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
 }
 
 if ($Actions.Count) {
-    Set-Item -Path "Function:Global:Actions" -Value {
+    New-Item -Path "Function:Global:Actions" -Value {
         Write-Host
         foreach ($ActionType in $Actions) {
             Write-Host "$($ActionType.Name):" $ActionType.Description
