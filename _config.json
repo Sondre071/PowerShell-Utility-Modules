@@ -12,9 +12,10 @@
     }
   },
   "LLM": {
-    "model": "",
-    "modelAlternatives": [],
-    "ApiKey": ""
+    "CurrentModel": "",
+    "Models": [],
+    "ApiKey": "",
+    "ApiUrl"
   },
   "Sync": {}
 }

@@ -1,6 +1,7 @@
-Import-Module PUM-Utils
+Import-Module PUM.Utils
+Import-Module "$PSScriptRoot\..\PUM.Utils\ConfigUtils.psm1" -Function Get-Config
 
-[PSObject]$Config = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json -Depth 7
+[PSObject]$Config = Get-Config
 [array]$Actions = @()
 
 foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {

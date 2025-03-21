@@ -1,6 +1,7 @@
-Import-Module PMU-Utils
+Import-Module PUM.Utils
+Import-Module "$PSScriptRoot\..\PUM.Utils\ConfigUtils.psm1" -Function Get-Config
 
-$Config = (Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath "..\..\config.json") | ConvertFrom-Json)
+$Config = Get-Config
 $ApiKey = $Config.LLM.ApiKey
 $ApiUrl = $Config.LLM.ApiUrl
 $Model = $Config.LLM.CurrentModel
