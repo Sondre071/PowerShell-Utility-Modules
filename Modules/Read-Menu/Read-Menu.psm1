@@ -10,8 +10,6 @@ function Read-Menu {
     $StartingRow = [System.Console]::CursorTop
 
     while ($true) {
-        [System.Console]::SetCursorPosition(0, $StartingRow)
-
         for ($i = 0; $i -lt $MenuArray.Count; $i++) {
             $color = if ($i -eq $CurrentIndex) { 'Yellow' } else { 'Gray' }
             Write-Host ">  $($MenuArray[$i])" -ForegroundColor $color
@@ -35,6 +33,9 @@ function Read-Menu {
                 }
             }
         }
+
+        $StartingRow = [System.Console]::CursorTop - $MenuArray.Length
+        [System.Console]::SetCursorPosition(0, $StartingRow)
     }
 }
 
