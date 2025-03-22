@@ -18,8 +18,6 @@ class ModuleConfig {
         catch {
             throw "Failed to parse config file: $_."
         }
-
-        Write-Host $this.Data
     }
 }
 
