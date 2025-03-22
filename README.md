@@ -12,7 +12,7 @@
 ### LLM
 
 - Capable of sending prompts to OpenRouter, provided you supply your own api key.
-- Initiated by simply typing 'LLM'.
+- Initiated by simply typing 'OR'.
 
 ### Actions
 
