@@ -1,5 +1,5 @@
 $Config = Use-Config
-$ORConfig = $Config.Data.Or
+$ORConfig = $Config.Data.OR
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
@@ -7,7 +7,32 @@ function OR() {
 
     switch ($Action) {
         'New session' {
-            New-Session 
+
+            Write-Host `n"Choose a prompt" -ForegroundColor Yellow 
+
+            $PromptKeys = $ORConfig.Prompts.PSObject.Properties.Name
+            $PromptKey = Read-Menu -FirstOptions @('None') -MenuArray $PromptKeys -LastOptions @('Create new prompt')
+
+            $SystemPrompt = ""
+
+            switch ($PromptKey) {
+                'Create new prompt' {
+
+                    Write-Host `n"Enter a new prompt: " -ForegroundColor Yellow -NoNewLine
+                    $NewPrompt = Read-Host
+
+                    if (-not $NewPrompt) {
+                        Write-Host "No prompt provided." -ForegroundColor Yellow
+                    }
+
+                    $SystemPrompt = $NewPrompt
+                }
+                default {
+                    $SystemPrompt = $ORConfig.Prompts.$PromptKey
+                }
+            }
+
+            New-Session -SystemPrompt $SystemPrompt
         }
         'Model' {
             Open-Model-Menu
@@ -18,7 +43,7 @@ function OR() {
     }
 }
 
-function New-Session() {
+function New-Session($SystemPrompt) {
     $MessageHistory.Clear()
 
     $HttpClient = [System.Net.Http.HttpClient]::new()
@@ -30,7 +55,7 @@ function New-Session() {
         Write-Host
 
         try {
-            $Stream = New-Stream -HttpClient $HttpClient -UserInput $UserInput
+            $Stream = New-Stream -UserInput $UserInput -SystemPrompt $SystemPrompt -HttpClient $HttpClient 
 
             $ModelResponse = Read-Stream $Stream
 
@@ -42,13 +67,29 @@ function New-Session() {
     }
 }
 
-function New-Stream($UserInput, $HttpClient) {
+function New-Stream($UserInput, $SystemPrompt, $HttpClient) {
+
+    $Messages = @()
+
+    if ($SystemPrompt) {
+        $Messages += @{
+            role    = 'system'
+            content = $SystemPrompt
+        }    
+    }
+
+    if ($MessageHistory) {
+        $Messages += $MessageHistory
+    }
+
+    $Messages += @{
+        role    = 'user'
+        content = $UserInput
+    }
+
     $RequestBody = @{
         model    = $Config.CurrentModel
-        messages = $MessageHistory + @{
-            role    = 'user'
-            content = $UserInput
-        }
+        messages = $Messages
         stream   = 'true'
     } | ConvertTo-Json
 

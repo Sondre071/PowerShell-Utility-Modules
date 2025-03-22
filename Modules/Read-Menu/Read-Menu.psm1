@@ -1,17 +1,20 @@
 function Read-Menu {
     param (
+        [string[]]$FirstOptions,
+
         [Parameter(Mandatory = $true)]
         [string[]]$MenuArray,
 
-        # Optional parameter to add an exit option.
+        [string[]]$LastOptions,
+
         [switch]$WithExit
     )
 
     $SortedMenuArray = $MenuArray | Sort-Object
 
-    if ($WithExit) {
-        $SortedMenuArray += 'Exit'
-    }
+    if ($FirstOptions) { $SortedMenuArray = $FirstOptions + $SortedMenuArray }
+    if ($LastOptions) { $SortedMenuArray += $LastOptions }
+    if ($WithExit) { $SortedMenuArray += 'Exit' }
 
     [System.Console]::CursorVisible = $False
 
