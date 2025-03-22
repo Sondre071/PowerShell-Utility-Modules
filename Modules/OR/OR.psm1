@@ -17,7 +17,6 @@ function OR() {
 
             switch ($PromptKey) {
                 'Create new prompt' {
-
                     Write-Host `n"Enter a new prompt: " -ForegroundColor Yellow -NoNewLine
                     $NewPrompt = Read-Host
 
@@ -26,6 +25,9 @@ function OR() {
                     }
 
                     $SystemPrompt = $NewPrompt
+                }
+                'None' { 
+                    break 
                 }
                 default {
                     $SystemPrompt = $ORConfig.Prompts.$PromptKey
