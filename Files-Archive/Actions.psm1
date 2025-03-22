@@ -1,3 +1,5 @@
+# This script was used to create and export functions based on a configuration file.
+
 [PSObject]$Config = Use-Config
 [Array]$Actions = @()
 
@@ -41,4 +43,4 @@ if ($Actions.Count) {
     }
 }
 
-Export-ModuleMember Actions, Terminal
+Export-ModuleMember Actions

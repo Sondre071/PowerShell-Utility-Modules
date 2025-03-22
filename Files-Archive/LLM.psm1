@@ -1,3 +1,5 @@
+# This is an old version of the OR module.
+
 $Config = Use-Config
 $ApiKey = $Config.LLM.ApiKey
 $ApiUrl = $Config.LLM.ApiUrl

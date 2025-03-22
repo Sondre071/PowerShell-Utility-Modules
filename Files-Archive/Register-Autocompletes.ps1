@@ -1,4 +1,5 @@
-# This syntax is used to register options for autocomplete.
+# This file was used to register autocomplete options.
+# I realized a menu would be a better experience so I threw this away.
 
 $ConfigFile = ((Get-Content -Path "$PSScriptRoot/config.json") | ConvertFrom-Json).Actions.FunctionGroups
 
