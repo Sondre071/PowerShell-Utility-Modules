@@ -1,17 +1,17 @@
 # This syntax is used to register options for autocomplete.
 
-$Config = ((Get-Content -Path "$PSScriptRoot/config.json") | ConvertFrom-Json).Actions.FunctionGroups
+$ConfigFile = ((Get-Content -Path "$PSScriptRoot/config.json") | ConvertFrom-Json).Actions.FunctionGroups
 
-Write-Host $Config
+Write-Host $ConfigFile
 
-foreach ($ActionType in $Config.PSObject.Properties) {
+foreach ($ActionType in $ConfigFile.PSObject.Properties) {
 
     Write-host $ActionType.Name
     Write-host $ActionType.Value
 
     Register-ArgumentCompleter -CommandName $ActionType.Name -ParameterName Parameter -ScriptBlock {
 
-        foreach ($Parameter in $Config.$ActionType.Value.Parameters.PSObject.Properties) {
+        foreach ($Parameter in $ConfigFile.$ActionType.Value.Parameters.PSObject.Properties) {
             New-Object -TypeName System.Management.Automation.CompletionResult -ArgumentList @(
                 $Parameter.Name
                 $Parameter.Name
@@ -22,4 +22,4 @@ foreach ($ActionType in $Config.PSObject.Properties) {
     }.GetNewClosure()
 }
 
-Remove-Variable -Name Config
+Remove-Variable -Name ConfigFile

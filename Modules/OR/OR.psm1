@@ -1,7 +1,4 @@
-$Config = Get-Config
-$ApiKey = $Config.OR.ApiKey
-$ApiUrl = $Config.OR.ApiUrl
-$Model = $Config.OR.CurrentModel
+$Config = Use-Config
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
@@ -11,11 +8,8 @@ function OR() {
         'New session' {
             New-Session 
         }
-        'Info' {
-            Write-Host "Some info.."
-        }
         'Model' {
-            Write-Host "Model.."
+            ModelScreen
         }
         'Exit' {
             break
@@ -44,13 +38,12 @@ function New-Session() {
         catch {
             throw "Error: $_"
         }
-
     }
 }
 
 function New-Stream($UserInput, $HttpClient) {
     $RequestBody = @{
-        model    = $Model
+        model    = $Config.Data.OR.CurrentModel
         messages = $MessageHistory + @{
             role    = 'user'
             content = $UserInput
@@ -58,8 +51,8 @@ function New-Stream($UserInput, $HttpClient) {
         stream   = 'true'
     } | ConvertTo-Json
 
-    $Request = [System.Net.Http.HttpRequestMessage]::new('POST', $ApiUrl)
-    $Request.Headers.Add('Authorization', "Bearer $ApiKey")
+    $Request = [System.Net.Http.HttpRequestMessage]::new('POST', $($Config.Data.OR.ApiUrl))
+    $Request.Headers.Add('Authorization', "Bearer $($Config.Data.OR.ApiKey)")
     $Request.Content = [System.Net.Http.StringContent]::new($RequestBody, [System.Text.Encoding]::UTF8, 'application/json')
 
     $CancellationToken = [System.Threading.CancellationTokenSource]::new().Token
@@ -110,6 +103,25 @@ function SaveToMessageHistory($UserInput, $ModelResponse) {
                 role    = 'model'
                 content = $ModelResponse
             })
+    }
+}
+
+function ModelScreen() {
+    Write-Host `n"Current model is: $($Config.Data.OR.Model)" -ForegroundColor Yellow
+
+    $Action = Read-Menu -MenuArray @('Add model', 'Change model', 'Exit')
+
+    switch ($Action) {
+        'Add model' {
+            Read-Host "Enter model name" -ForegroundColor Yellow | OR.CurrentModel
+            Write-Host Done. -ForegroundColor Yellow
+        }
+        'Change model' {
+            Change-Model
+        }
+        'Exit' {
+            break
+        }
     }
 }
 
