@@ -6,7 +6,7 @@ function Folder($Parameter) {
         return
     }
 
-    $PathKey = if ($Parameter) { $Parameter } else { (Read-Menu -MenuArray ($Config.Paths.PSObject.Properties.Name)) }
+    $PathKey = if ($Parameter) { $Parameter } else { (Read-Menu -Options ($Config.Paths.PSObject.Properties.Name)) }
 
     if (-not $PathKey) {
         Write-Host "Key not found."

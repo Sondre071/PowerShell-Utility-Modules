@@ -5,7 +5,7 @@ $LLMTextColor = $Config.Data.UserSettings.Colors.LLMText
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
-    $Action = Read-Menu -MenuArray @('New session', 'Model') -WithExit
+    $Action = Read-Menu -Options @('New session', 'Model') -WithExit
 
     switch ($Action) {
         'New session' {
@@ -13,7 +13,7 @@ function OR() {
             Write-Host `n"Choose a prompt" -ForegroundColor $MenuTextColor 
 
             $PromptKeys = $ORConfig.Prompts.PSObject.Properties.Name
-            $PromptKey = Read-Menu -FirstOptions @('None') -MenuArray $PromptKeys -LastOptions @('Create new prompt')
+            $PromptKey = Read-Menu -FirstOptions @('None') -Options $PromptKeys -LastOptions @('Create new prompt')
 
             $SystemPrompt = ""
 
@@ -164,7 +164,7 @@ function SaveToMessageHistory($UserInput, $ModelResponse) {
 function Open-Model-Menu() {
     Write-Host `n"Current model is: $($ORConfig.CurrentModel)" -ForegroundColor $MenuTextColor
 
-    $Action = Read-Menu -MenuArray @('Add model', 'Change model') -WithExit
+    $Action = Read-Menu -Options @('Add model', 'Change model') -WithExit
 
     switch ($Action) {
         'Add model' {
@@ -185,7 +185,7 @@ function Open-Model-Menu() {
         }
         'Change model' {
             Write-Host -ForegroundColor $MenuTextColor `n"Select model:"
-            $NewModel = Read-Menu -MenuArray $ORConfig.Models -WithExit
+            $NewModel = Read-Menu -Options $ORConfig.Models -WithExit
 
             if ($NewModel -eq 'Exit') {
                 Write-Host

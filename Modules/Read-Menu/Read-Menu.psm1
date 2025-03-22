@@ -2,21 +2,21 @@ $MenuTextColor = (Use-Config).Data.UserSettings.Colors.MenuText
 
 function Read-Menu {
     param (
-        [string[]]$FirstOptions,
-
         [Parameter(Mandatory = $true)]
-        [string[]]$MenuArray,
+        [string[]]$Options,
+
+        [string[]]$FirstOptions,
 
         [string[]]$LastOptions,
 
         [switch]$WithExit
     )
 
-    $SortedMenuArray = $MenuArray | Sort-Object
+    $Options = $Options | Sort-Object
 
-    if ($FirstOptions) { $SortedMenuArray = $FirstOptions + $SortedMenuArray }
-    if ($LastOptions) { $SortedMenuArray += $LastOptions }
-    if ($WithExit) { $SortedMenuArray += 'Exit' }
+    if ($FirstOptions) { $Options = $FirstOptions + $Options }
+    if ($LastOptions) { $Options += $LastOptions }
+    if ($WithExit) { $Options += 'Exit' }
 
     [System.Console]::CursorVisible = $False
 
@@ -24,9 +24,9 @@ function Read-Menu {
     $StartingRow = [System.Console]::CursorTop
 
     while ($true) {
-        for ($i = 0; $i -lt $SortedMenuArray.Count; $i++) {
+        for ($i = 0; $i -lt $Options.Count; $i++) {
             $color = if ($i -eq $CurrentIndex) { $MenuTextColor } else { 'Gray' }
-            Write-Host ">  $($SortedMenuArray[$i])" -ForegroundColor $color
+            Write-Host ">  $($Options[$i])" -ForegroundColor $color
         }
 
         if ([Console]::KeyAvailable) {
@@ -38,12 +38,12 @@ function Read-Menu {
                     Break
                 }
                 { $_ -in "DownArrow", "J" } {
-                    $CurrentIndex = [Math]::Min($SortedMenuArray.Count - 1, $CurrentIndex + 1)
+                    $CurrentIndex = [Math]::Min($Options.Count - 1, $CurrentIndex + 1)
                     Break
                 }
                 { $_ -in "Enter", "L" } {
                     [System.Console]::CursorVisible = $true
-                    Return $SortedMenuArray[$CurrentIndex]
+                    Return $Options[$CurrentIndex]
                 }
                 { $_ -in "Escape", "Q" -and $WithExit } {
                     [System.Console]::CursorVisible = $true
@@ -52,7 +52,7 @@ function Read-Menu {
             }
         }
 
-        $StartingRow = [System.Console]::CursorTop - $SortedMenuArray.Length
+        $StartingRow = [System.Console]::CursorTop - $Options.Length
         [System.Console]::SetCursorPosition(0, $StartingRow)
     }
 }
