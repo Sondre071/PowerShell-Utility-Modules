@@ -1,6 +1,6 @@
-[PSObject]$Config = (Use-Config).Data.Folder
+[PSObject]$Config = (Use-Config).Data.Web
 
-function Folder($PathKey) {
+function Web($PathKey) {
     if (-not $Config.Parameters.PSObject.Properties.Length) {
         Write-Host "No keys found."
         return
@@ -15,7 +15,9 @@ function Folder($PathKey) {
 
     $Path = $Config.Parameters.$ConfigKey
 
-    explorer ($Path -replace '/', '\')
+    $BrowserPath = $Config.BrowserPath
+
+    Start-Process -FilePath $BrowserPath -ArgumentList ($Path)
 }
 
-Export-ModuleMember -Function Folder
+Export-ModuleMember -Function Web
