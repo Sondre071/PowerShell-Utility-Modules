@@ -19,15 +19,19 @@
     "Description": "Open directory in explorer.",
     "Parameters": {}
   },
-  "Web": {
-    "Description": "Open URL in browser.",
-    "BrowserPath": "",
-    "Parameters": {}
-  },
   "OR": {
     "CurrentModel": "",
     "Models": [],
     "ApiKey": "",
     "ApiUrl": ""
+  },
+  "Run": {
+    "Description": "Run file.",
+    "Parameters": {}
+  },
+  "Web": {
+    "Description": "Open URL in browser.",
+    "BrowserPath": "",
+    "Parameters": {}
   }
 }
