@@ -1,24 +1,24 @@
 {
   "Edit": {
-    "Parameters": {}
+    "Paths": {}
   },
   "Folder": {
-    "Parameters": {}
+    "Paths": {}
   },
   "OR": {
     "CurrentModel": "",
     "Models": [],
     "ApiKey": "",
-    "ApiUrl": ""
+    "ApiUrl": "https://openrouter.ai/api/v1/chat/completions",
   },
   "Run": {
-    "Parameters": {}
+    "Paths": {}
   },
   "Terminal": {
-    "Parameters": {}
+    "Paths": {}
   },
   "Web": {
     "BrowserPath": "",
-    "Parameters": {}
+    "Paths": {}
   }
 }
