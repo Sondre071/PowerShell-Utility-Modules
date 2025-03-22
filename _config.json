@@ -6,7 +6,7 @@
     "Paths": {}
   },
   "OR": {
-    "CurrentModel": "",
+    "CurrentModel": "meta-llama/llama-3.3-70b-instruct",
     "Models": [],
     "ApiKey": "",
     "ApiUrl": "https://openrouter.ai/api/v1/chat/completions"

@@ -3,7 +3,7 @@ $ORConfig = $Config.Data.Or
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
-    $Action = Read-Menu -MenuArray @('New session', 'Info', 'Model') -WithExit
+    $Action = Read-Menu -MenuArray @('New session', 'Model') -WithExit
 
     switch ($Action) {
         'New session' {
@@ -14,7 +14,6 @@ function OR() {
         }
         'Exit' {
             Write-Host
-            break
         }
     }
 }
@@ -26,7 +25,9 @@ function New-Session() {
 
     while ($true) {
 
+        Write-Host
         $UserInput = Read-Host "You"
+        Write-Host
 
         try {
             $Stream = New-Stream -HttpClient $HttpClient -UserInput $UserInput
@@ -72,23 +73,32 @@ function Read-Stream($Stream) {
 
     $ModelResponse = ""
 
-    Write-Host
+    $FirstToken = $false
 
     while (-not $Reader.EndOfStream) {
         $Line = $Reader.ReadLine()
+        $ValuesToSkip = @(': OPENROUTER PROCESSING', 'data: [DONE]', '')
+
+        if ($Line -in $ValuesToSkip) { continue }
 
         try {
-            $ParsedLine = ($Line.Substring(7) | ConvertFrom-Json).choices.delta.content
+            $ParsedLine = ($Line.Substring(6) | ConvertFrom-Json).choices.delta.content
+
+            # Trim leading whitespace from the first token.
+            if (-not $FirstToken) {
+                $ParsedLine = $ParsedLine.TrimStart()
+                $FirstToken = $true
+            }
 
             Write-Host -NoNewLine -ForegroundColor Green $ParsedLine
             $ModelResponse += $ParsedLine
         }
         catch {
-            continue
+            throw "Stream error: $_"
         }
     }
 
-    Write-Host `n
+    Write-Host
 
     return $ModelResponse
 }
@@ -113,11 +123,20 @@ function Open-Model-Menu() {
 
     switch ($Action) {
         'Add model' {
-            Write-Host -ForegroundColor Yellow -NoNewLine "Enter OpenRouter model id: " 
+            Write-Host `n"Enter OpenRouter model id: " -ForegroundColor Yellow -NoNewLine 
 
             $NewModel = Read-Host
 
-            Write-Host Done. -ForegroundColor Yellow
+            if (-not $NewModel) {
+                Write-Host "No model provided." -ForegroundColor Yellow
+            }
+
+            $Config.Data.OR.CurrentModel = $NewModel
+            $Config.Data.OR.Models += $NewModel
+
+            $Config.Save()
+
+            Write-Host `n"$NewModel set to current model."`n -ForegroundColor Yellow
         }
         'Change model' {
             Write-Host -ForegroundColor Yellow `n"Select model:"
@@ -136,7 +155,6 @@ function Open-Model-Menu() {
         }
         'Exit' {
             Write-Host
-            break
         }
     }
 }
