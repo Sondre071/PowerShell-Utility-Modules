@@ -27,5 +27,11 @@
   "Web": {
     "BrowserPath": "",
     "Paths": {}
+  },
+  "UserSettings": {
+    "Colors": {
+      "MenuText": "Yellow",
+      "LLMText": "Cyan"
+    }
   }
 }

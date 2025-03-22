@@ -1,3 +1,5 @@
+$MenuTextColor = (Use-Config).Data.UserSettings.Colors.MenuText
+
 function Read-Menu {
     param (
         [string[]]$FirstOptions,
@@ -23,7 +25,7 @@ function Read-Menu {
 
     while ($true) {
         for ($i = 0; $i -lt $SortedMenuArray.Count; $i++) {
-            $color = if ($i -eq $CurrentIndex) { 'Yellow' } else { 'Gray' }
+            $color = if ($i -eq $CurrentIndex) { $MenuTextColor } else { 'Gray' }
             Write-Host ">  $($SortedMenuArray[$i])" -ForegroundColor $color
         }
 

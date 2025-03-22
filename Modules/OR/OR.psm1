@@ -1,5 +1,7 @@
 $Config = Use-Config
 $ORConfig = $Config.Data.OR
+$MenuTextColor = $Config.Data.UserSettings.Colors.MenuText
+$LLMTextColor = $Config.Data.UserSettings.Colors.LLMText
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
@@ -8,7 +10,7 @@ function OR() {
     switch ($Action) {
         'New session' {
 
-            Write-Host `n"Choose a prompt" -ForegroundColor Yellow 
+            Write-Host `n"Choose a prompt" -ForegroundColor $MenuTextColor 
 
             $PromptKeys = $ORConfig.Prompts.PSObject.Properties.Name
             $PromptKey = Read-Menu -FirstOptions @('None') -MenuArray $PromptKeys -LastOptions @('Create new prompt')
@@ -17,11 +19,11 @@ function OR() {
 
             switch ($PromptKey) {
                 'Create new prompt' {
-                    Write-Host `n"Enter a new prompt: " -ForegroundColor Yellow -NoNewLine
+                    Write-Host `n"Enter a new prompt: " -ForegroundColor $MenuTextColor -NoNewLine
                     $NewPrompt = Read-Host
 
                     if (-not $NewPrompt) {
-                        Write-Host "No prompt provided." -ForegroundColor Yellow
+                        Write-Host "No prompt provided." -ForegroundColor $MenuTextColor
                     }
 
                     $SystemPrompt = $NewPrompt
@@ -133,7 +135,7 @@ function Read-Stream($Stream) {
                 $FirstToken = $true
             }
 
-            Write-Host -NoNewLine -ForegroundColor Green $ParsedLine
+            Write-Host -NoNewLine -ForegroundColor $LLMTextColor $ParsedLine
             $ModelResponse += $ParsedLine
         }
         catch {
@@ -160,18 +162,18 @@ function SaveToMessageHistory($UserInput, $ModelResponse) {
 }
 
 function Open-Model-Menu() {
-    Write-Host `n"Current model is: $($ORConfig.CurrentModel)" -ForegroundColor Yellow
+    Write-Host `n"Current model is: $($ORConfig.CurrentModel)" -ForegroundColor $MenuTextColor
 
     $Action = Read-Menu -MenuArray @('Add model', 'Change model') -WithExit
 
     switch ($Action) {
         'Add model' {
-            Write-Host `n"Enter OpenRouter model id: " -ForegroundColor Yellow -NoNewLine 
+            Write-Host `n"Enter OpenRouter model id: " -ForegroundColor $MenuTextColor -NoNewLine 
 
             $NewModel = Read-Host
 
             if (-not $NewModel) {
-                Write-Host "No model provided." -ForegroundColor Yellow
+                Write-Host "No model provided." -ForegroundColor $MenuTextColor
             }
 
             $Config.Data.OR.CurrentModel = $NewModel
@@ -179,10 +181,10 @@ function Open-Model-Menu() {
 
             $Config.Save()
 
-            Write-Host `n"$NewModel set to current model."`n -ForegroundColor Yellow
+            Write-Host `n"$NewModel set to current model."`n -ForegroundColor $MenuTextColor
         }
         'Change model' {
-            Write-Host -ForegroundColor Yellow `n"Select model:"
+            Write-Host -ForegroundColor $MenuTextColor `n"Select model:"
             $NewModel = Read-Menu -MenuArray $ORConfig.Models -WithExit
 
             if ($NewModel -eq 'Exit') {
@@ -194,7 +196,7 @@ function Open-Model-Menu() {
 
             $Config.Save()
 
-            Write-Host -ForegroundColor Yellow `n"Current model set to $NewModel."`n
+            Write-Host -ForegroundColor $MenuTextColor `n"Current model set to $NewModel."`n
         }
         'Exit' {
             Write-Host
