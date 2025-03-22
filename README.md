@@ -1,6 +1,6 @@
 # Sondre's PowerShell Modules
 
-- A collection of modules I began working on during christmas of 2024 when I migrated from Bash and took a strong liking to the syntax and simplicity that is PowerShell ✨.
+- A collection of modules I began working on during christmas of 2024 when I migrated from Bash and took a strong liking to the syntax and simplicity that is PowerShell ✨
 
 ## Installation
 
