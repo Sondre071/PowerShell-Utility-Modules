@@ -9,7 +9,7 @@
     "CurrentModel": "",
     "Models": [],
     "ApiKey": "",
-    "ApiUrl": "https://openrouter.ai/api/v1/chat/completions",
+    "ApiUrl": "https://openrouter.ai/api/v1/chat/completions"
   },
   "Run": {
     "Paths": {}

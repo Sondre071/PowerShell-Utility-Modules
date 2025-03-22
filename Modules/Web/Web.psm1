@@ -1,21 +1,26 @@
 [PSObject]$Config = (Use-Config).Data.Web
 
-function Web($PathKey) {
+function Web($Parameter) {
     if (-not $Config.Paths.PSObject.Properties.Length) {
         Write-Host "No keys found."
         return
     }
 
-    $ConfigKey = if ($PathKey) { $PathKey } else { (Read-Menu -MenuArray ($Config.Paths.PSObject.Properties.Name)) }
+    $Pathkey = if ($Parameter) { $Parameter } else { (Read-Menu -MenuArray ($Config.Paths.PSObject.Properties.Name)) }
 
-    if (-not $ConfigKey) {
+    if (-not $PathKey) {
         Write-Host "Key not found."
         return
     }
 
-    $Path = $Config.Paths.$ConfigKey
-
     $BrowserPath = $Config.BrowserPath
+
+    if (-not $BrowserPath) {
+        Write-Host "Browser path not found."
+        return
+    }
+
+    $Path = $Config.Paths.$PathKey
 
     Start-Process -FilePath $BrowserPath -ArgumentList ($Path)
 }
