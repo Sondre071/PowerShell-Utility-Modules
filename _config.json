@@ -26,7 +26,13 @@
   },
   "Web": {
     "BrowserPath": "",
-    "Paths": {}
+    "Paths": {
+      "ChatGPT": "https://chat.com/",
+      "Kode24": "https://kode24.no/",
+      "OpenRouter": "https://openrouter.ai/",
+      "Youtube: Home": "https://www.youtube.com/",
+      "Youtube: Watch later": "https://www.youtube.com/playlist?list=WL"
+    }
   },
   "UserSettings": {
     "Colors": {
