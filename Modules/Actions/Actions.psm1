@@ -1,4 +1,4 @@
-[PSObject]$Config = Get-Config
+[PSObject]$Config = Use-Config
 [Array]$Actions = @()
 
 foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {

@@ -1,4 +1,4 @@
-$Config = Get-Config
+$Config = Use-Config
 $ApiKey = $Config.LLM.ApiKey
 $ApiUrl = $Config.LLM.ApiUrl
 $Model = $Config.LLM.CurrentModel
