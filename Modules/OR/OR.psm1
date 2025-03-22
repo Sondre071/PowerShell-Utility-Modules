@@ -1,4 +1,5 @@
 $Config = Use-Config
+$ORConfig = $Config.Data.Or
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
@@ -9,14 +10,12 @@ function OR() {
             New-Session 
         }
         'Model' {
-            ModelScreen
+            Model-Screen
         }
         'Exit' {
             break
         }
     }
-
-    Write-Host "hi"
 }
 
 function New-Session() {
@@ -43,7 +42,7 @@ function New-Session() {
 
 function New-Stream($UserInput, $HttpClient) {
     $RequestBody = @{
-        model    = $Config.Data.OR.CurrentModel
+        model    = $Config.CurrentModel
         messages = $MessageHistory + @{
             role    = 'user'
             content = $UserInput
@@ -51,8 +50,8 @@ function New-Stream($UserInput, $HttpClient) {
         stream   = 'true'
     } | ConvertTo-Json
 
-    $Request = [System.Net.Http.HttpRequestMessage]::new('POST', $($Config.Data.OR.ApiUrl))
-    $Request.Headers.Add('Authorization', "Bearer $($Config.Data.OR.ApiKey)")
+    $Request = [System.Net.Http.HttpRequestMessage]::new('POST', $($ORConfig.ApiUrl))
+    $Request.Headers.Add('Authorization', "Bearer $($ORConfig.ApiKey)")
     $Request.Content = [System.Net.Http.StringContent]::new($RequestBody, [System.Text.Encoding]::UTF8, 'application/json')
 
     $CancellationToken = [System.Threading.CancellationTokenSource]::new().Token
@@ -78,7 +77,7 @@ function Read-Stream($Stream) {
         $Line = $Reader.ReadLine()
 
         try {
-            $ParsedLine = ($Line.Substring(6) | ConvertFrom-Json).choices.delta.content
+            $ParsedLine = ($Line.Substring(7) | ConvertFrom-Json).choices.delta.content
 
             Write-Host -NoNewLine -ForegroundColor Green $ParsedLine
             $ModelResponse += $ParsedLine
@@ -106,18 +105,28 @@ function SaveToMessageHistory($UserInput, $ModelResponse) {
     }
 }
 
-function ModelScreen() {
-    Write-Host `n"Current model is: $($Config.Data.OR.Model)" -ForegroundColor Yellow
+function Model-Screen() {
+    Write-Host `n"Current model is: $($ORConfig.CurrentModel)" -ForegroundColor Yellow
 
     $Action = Read-Menu -MenuArray @('Add model', 'Change model', 'Exit')
 
     switch ($Action) {
         'Add model' {
-            Read-Host "Enter model name" -ForegroundColor Yellow | OR.CurrentModel
+            Write-Host -ForegroundColor Yellow -NoNewLine "Enter OpenRouter model id: " 
+
+            $NewModel = Read-Host
+
             Write-Host Done. -ForegroundColor Yellow
         }
         'Change model' {
-            Change-Model
+            Write-Host -ForegroundColor Yellow `n"Select model:" 
+
+            $NewModel = Read-Menu -MenuArray $ORConfig.Models
+            $ORConfig.CurrentModel = $NewModel
+
+            $Config.Save()
+
+            Write-Host -ForegroundColor Yellow `n"Current model set to $NewModel."`n
         }
         'Exit' {
             break

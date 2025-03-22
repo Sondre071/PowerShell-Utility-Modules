@@ -19,6 +19,10 @@ class ModuleConfig {
             throw "Failed to parse config file: $_."
         }
     }
+
+    [void] Save() {
+        $this.Data | ConvertTo-Json -Depth 7 | Set-Content -Path $this.ConfigPath
+    }
 }
 
 function Use-Config() {
