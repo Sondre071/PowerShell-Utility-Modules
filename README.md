@@ -42,4 +42,4 @@
 
 ### Use-Config
 
-- Opens a config class to interact with the config.json file.
+- Instantiates a config class to interact with the config.json file.
