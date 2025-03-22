@@ -1,25 +1,14 @@
 {
-  "Actions": {
-    "FunctionGroups": {
-      "Print": {
-        "Description": "This is an example function!",
-        "Function": "Write-Host $Parameter",
-        "Parameters": {
-          "Hello": "Hello, World!",
-          "PI": "Pi is 3,14!"
-        }
-      }
-    }
-  },
   "Edit": {
     "Description": "Open directory in VSCode.",
     "Parameters": {}
   },
   "Folder": {
-    "Description": "Open directory in explorer.",
+    "Description": "Open directory in windows explorer.",
     "Parameters": {}
   },
   "OR": {
+    "Description": "Opens an OpenRouter chat session.",
     "CurrentModel": "",
     "Models": [],
     "ApiKey": "",
@@ -29,8 +18,12 @@
     "Description": "Run file.",
     "Parameters": {}
   },
+  "Terminal": {
+    "Description": "Open directory in the terminal.",
+    "Parameters": {}
+  },
   "Web": {
-    "Description": "Open URL in browser.",
+    "Description": "Open URL in the browser.",
     "BrowserPath": "",
     "Parameters": {}
   }

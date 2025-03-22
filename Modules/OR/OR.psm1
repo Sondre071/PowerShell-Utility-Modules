@@ -3,16 +3,17 @@ $ORConfig = $Config.Data.Or
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
-    $Action = Read-Menu -MenuArray @('New session', 'Info', 'Model')
+    $Action = Read-Menu -MenuArray @('New session', 'Info', 'Model') -LastEntry 'Exit'
 
     switch ($Action) {
         'New session' {
             New-Session 
         }
         'Model' {
-            Model-Screen
+            Open-Model-Menu
         }
         'Exit' {
+            Write-Host
             break
         }
     }
@@ -105,10 +106,10 @@ function SaveToMessageHistory($UserInput, $ModelResponse) {
     }
 }
 
-function Model-Screen() {
+function Open-Model-Menu() {
     Write-Host `n"Current model is: $($ORConfig.CurrentModel)" -ForegroundColor Yellow
 
-    $Action = Read-Menu -MenuArray @('Add model', 'Change model', 'Exit')
+    $Action = Read-Menu -MenuArray @('Add model', 'Change model') -LastEntry 'Exit'
 
     switch ($Action) {
         'Add model' {
@@ -129,6 +130,7 @@ function Model-Screen() {
             Write-Host -ForegroundColor Yellow `n"Current model set to $NewModel."`n
         }
         'Exit' {
+            Write-Host
             break
         }
     }

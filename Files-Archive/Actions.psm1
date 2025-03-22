@@ -9,7 +9,7 @@ foreach ($Group in $Config.Data.Actions.FunctionGroups.PSObject.Properties) {
     $ScriptBlock = {
         param(
             [string]$PathKey
-            )
+        )
 
         $Group = $Config.Data.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
         $ParameterKey = if ($PathKey) { $Pathkey } else { (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)) }

@@ -1,8 +1,17 @@
 function Read-Menu {
     param (
         [Parameter(Mandatory = $true)]
-        [string[]]$MenuArray
+        [string[]]$MenuArray,
+
+        # Optional parameter to bypass the menu sort.
+        [string]$LastEntry
     )
+
+    $SortedMenuArray = $MenuArray | Sort-Object
+
+    if ($LastEntry) {
+        $SortedMenuArray += $LastEntry
+    }
 
     [System.Console]::CursorVisible = $False
 
@@ -10,9 +19,9 @@ function Read-Menu {
     $StartingRow = [System.Console]::CursorTop
 
     while ($true) {
-        for ($i = 0; $i -lt $MenuArray.Count; $i++) {
+        for ($i = 0; $i -lt $SortedMenuArray.Count; $i++) {
             $color = if ($i -eq $CurrentIndex) { 'Yellow' } else { 'Gray' }
-            Write-Host ">  $($MenuArray[$i])" -ForegroundColor $color
+            Write-Host ">  $($SortedMenuArray[$i])" -ForegroundColor $color
         }
 
         if ([Console]::KeyAvailable) {
@@ -24,17 +33,17 @@ function Read-Menu {
                     Break
                 }
                 { $_ -in "DownArrow", "J" } {
-                    $CurrentIndex = [Math]::Min($MenuArray.Count - 1, $CurrentIndex + 1)
+                    $CurrentIndex = [Math]::Min($SortedMenuArray.Count - 1, $CurrentIndex + 1)
                     Break
                 }
                 { $_ -in "Enter", "L" } {
                     [System.Console]::CursorVisible = $true
-                    Return $MenuArray[$CurrentIndex]
+                    Return $SortedMenuArray[$CurrentIndex]
                 }
             }
         }
 
-        $StartingRow = [System.Console]::CursorTop - $MenuArray.Length
+        $StartingRow = [System.Console]::CursorTop - $SortedMenuArray.Length
         [System.Console]::SetCursorPosition(0, $StartingRow)
     }
 }
