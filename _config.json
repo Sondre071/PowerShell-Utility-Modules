@@ -8,12 +8,14 @@
   "OR": {
     "CurrentModel": "meta-llama/llama-3.3-70b-instruct",
     "Models": [
-      "openai/gpt-4o-2024-11-20",
       "deepseek/deepseek-chat",
-      "meta-llama/llama-3.3-70b-instruct"
+      "meta-llama/llama-3.3-70b-instruct",
+      "openai/chatgpt-4o-latest",
+      "qwen/qwen-max"
     ],
     "Prompts": {
-      "I need a git command that does..": "Provide the user git commands that accomplish what they ask, using concise, minimal wording."
+      "I need a git command that does..": "Provide the user git commands that accomplish what they ask. Use concise, minimal wording.",
+      "How can I be more productive and skilled using..": "The user will in their following message provide you with some thing or things the user uses. Your task is to assume he already this thing or these things very well, and provide them with concise, and powerful suggestions on ways they can 10x their proficiency and workflow with said things"
     },
     "ApiKey": "",
     "ApiUrl": "https://openrouter.ai/api/v1/chat/completions"
