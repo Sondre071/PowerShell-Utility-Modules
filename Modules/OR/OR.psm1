@@ -118,7 +118,7 @@ function Read-Stream($Stream) {
 
     $ModelResponse = ""
 
-    $FirstToken = $false
+    $FirstToken = $true
 
     while (-not $Reader.EndOfStream) {
         $Line = $Reader.ReadLine()
@@ -130,9 +130,9 @@ function Read-Stream($Stream) {
             $ParsedLine = ($Line.Substring(6) | ConvertFrom-Json).choices.delta.content
 
             # Trim leading whitespace from the first token.
-            if (-not $FirstToken) {
+            if ($FirstToken) {
                 $ParsedLine = $ParsedLine.TrimStart()
-                $FirstToken = $true
+                $FirstToken = $false
             }
 
             Write-Host -NoNewLine -ForegroundColor $LLMTextColor $ParsedLine
