@@ -1,7 +1,7 @@
 [PSObject]$Config = Use-Config
 [Array]$Actions = @()
 
-foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
+foreach ($Group in $Config.Data.Actions.FunctionGroups.PSObject.Properties) {
 
     #Create the functions defined in config.json.
     $ScriptBlock = {
@@ -9,7 +9,7 @@ foreach ($Group in $Config.Actions.FunctionGroups.PSObject.Properties) {
             [string]$PathKey
             )
 
-        $Group = $Config.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
+        $Group = $Config.Data.Actions.FunctionGroups.($MyInvocation.MyCommand.Name)
         $ParameterKey = if ($PathKey) { $Pathkey } else { (Read-Menu -MenuArray ($Group.Parameters.PSObject.Properties.Name)) }
         $Parameter = $Group.Parameters.$ParameterKey
                 
