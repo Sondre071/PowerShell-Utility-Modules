@@ -4,13 +4,13 @@ function Read-Menu {
         [string[]]$MenuArray,
 
         # Optional parameter to bypass the menu sorting.
-        [string]$LastEntry
+        [switch]$WithExit
     )
 
     $SortedMenuArray = $MenuArray | Sort-Object
 
-    if ($LastEntry) {
-        $SortedMenuArray += $LastEntry
+    if ($WithExit) {
+        $SortedMenuArray += 'Exit'
     }
 
     [System.Console]::CursorVisible = $False
@@ -39,6 +39,10 @@ function Read-Menu {
                 { $_ -in "Enter", "L" } {
                     [System.Console]::CursorVisible = $true
                     Return $SortedMenuArray[$CurrentIndex]
+                }
+                { $_ -in "Escape", "Q" -and $WithExit } {
+                    [System.Console]::CursorVisible = $true
+                    Return 'Exit'
                 }
             }
         }
