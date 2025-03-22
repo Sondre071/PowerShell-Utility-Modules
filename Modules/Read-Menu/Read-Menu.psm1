@@ -3,7 +3,7 @@ function Read-Menu {
         [Parameter(Mandatory = $true)]
         [string[]]$MenuArray,
 
-        # Optional parameter to bypass the menu sort.
+        # Optional parameter to bypass the menu sorting.
         [string]$LastEntry
     )
 
