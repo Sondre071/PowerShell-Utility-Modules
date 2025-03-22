@@ -122,7 +122,13 @@ function Open-Model-Menu() {
         'Change model' {
             Write-Host -ForegroundColor Yellow `n"Select model:" 
 
-            $NewModel = Read-Menu -MenuArray $ORConfig.Models
+            $NewModel = Read-Menu -MenuArray $ORConfig.Models -LastEntry 'Exit'
+
+            if ($NewModel -eq 'Exit') {
+                Write-Host
+                break
+            }
+
             $ORConfig.CurrentModel = $NewModel
 
             $Config.Save()
