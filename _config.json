@@ -1,29 +1,23 @@
 {
   "Edit": {
-    "Description": "Open directory in VSCode.",
     "Parameters": {}
   },
   "Folder": {
-    "Description": "Open directory in windows explorer.",
     "Parameters": {}
   },
   "OR": {
-    "Description": "Opens an OpenRouter chat session.",
     "CurrentModel": "",
     "Models": [],
     "ApiKey": "",
     "ApiUrl": ""
   },
   "Run": {
-    "Description": "Run file.",
     "Parameters": {}
   },
   "Terminal": {
-    "Description": "Open directory in the terminal.",
     "Parameters": {}
   },
   "Web": {
-    "Description": "Open URL in the browser.",
     "BrowserPath": "",
     "Parameters": {}
   }
