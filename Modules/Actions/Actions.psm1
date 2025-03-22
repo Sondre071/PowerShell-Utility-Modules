@@ -41,4 +41,4 @@ if ($Actions.Count) {
     }
 }
 
-Export-ModuleMember Actions, Edit, Folder, Run, Terminal, Web
+Export-ModuleMember Actions, Edit, Run, Terminal, Web
