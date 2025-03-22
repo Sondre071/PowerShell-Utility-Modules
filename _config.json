@@ -11,6 +11,14 @@
       }
     }
   },
+  "Edit": {
+    "Description": "Open directory in VSCode.",
+    "Parameters": {}
+  },
+  "Folder": {
+    "Description": "Open directory in explorer.",
+    "Parameters": {}
+  },
   "OR": {
     "CurrentModel": "",
     "Models": [],
