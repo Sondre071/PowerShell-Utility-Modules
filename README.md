@@ -20,7 +20,7 @@
 
 ### Folder
 
-- Open directory in Windows Explorer.
+- Open directory in Windows File Explorer.
 
 ### Run
 
