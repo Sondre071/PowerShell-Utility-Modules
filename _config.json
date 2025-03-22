@@ -7,7 +7,14 @@
   },
   "OR": {
     "CurrentModel": "meta-llama/llama-3.3-70b-instruct",
-    "Models": [],
+    "Models": [
+      "openai/gpt-4o-2024-11-20",
+      "deepseek/deepseek-chat",
+      "meta-llama/llama-3.3-70b-instruct"
+    ],
+    "Prompts": {
+      "I need a git command that does..": "Provide the user git commands that accomplish what they ask."
+    },
     "ApiKey": "",
     "ApiUrl": "https://openrouter.ai/api/v1/chat/completions"
   },
