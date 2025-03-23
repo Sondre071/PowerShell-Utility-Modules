@@ -42,7 +42,6 @@
 ### Read-Menu
 
 - Opens an interactive menu to select an option based on the provided array.
-- The menu currently breaks when there's only one option and I can't figure out why 🤔
 
 ### Use-Config
 
