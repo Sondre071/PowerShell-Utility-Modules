@@ -15,7 +15,7 @@
 
 ### Note
 
-- A system for printing quick personal notes.
+- Print any personal notes.
 
 ### Edit
 
