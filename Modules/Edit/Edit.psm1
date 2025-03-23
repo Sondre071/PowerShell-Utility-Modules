@@ -2,14 +2,14 @@
 
 function Edit($Parameter) {
     if (-not $Config.Paths.PSObject.Properties.Length) {
-        Write-Host "No keys found."
+        Write-Host "No keys found."`n
         return
     }
 
     $PathKey = if ($Parameter) { $Parameter } else { (Read-Menu -Options ($Config.Paths.PSObject.Properties.Name) -WithExit ) }
 
     if (-not $PathKey) {
-        Write-Host "Key not found."
+        Write-Host "Key not found."`n
         return
     }
 
@@ -19,6 +19,8 @@ function Edit($Parameter) {
     }
 
     $Path = $Config.Paths.$PathKey
+
+    Write-Host
 
     code ($Path)
 }
