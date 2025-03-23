@@ -62,9 +62,9 @@
   },
   "UserSettings": {
     "Colors": {
+      "LLMText": "Cyan",
       "MenuText": "Yellow",
-      "NoteText": "White",
-      "LLMText": "Cyan"
+      "NoteText": "White"
     }
   }
 }
