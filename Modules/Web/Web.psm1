@@ -6,10 +6,15 @@ function Web($Parameter) {
         return
     }
 
-    $Pathkey = if ($Parameter) { $Parameter } else { (Read-Menu -Options ($Config.Paths.PSObject.Properties.Name)) }
+    $Pathkey = if ($Parameter) { $Parameter } else { (Read-Menu -Options ($Config.Paths.PSObject.Properties.Name) -WithExit) }
 
     if (-not $PathKey) {
         Write-Host "Key not found."
+        return
+    }
+
+    if ($PathKey -eq 'Exit') {
+        Write-Host
         return
     }
 

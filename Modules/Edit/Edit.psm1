@@ -6,10 +6,15 @@ function Edit($Parameter) {
         return
     }
 
-    $PathKey = if ($Parameter) { $Parameter } else { (Read-Menu -Options ($Config.Paths.PSObject.Properties.Name)) }
+    $PathKey = if ($Parameter) { $Parameter } else { (Read-Menu -Options ($Config.Paths.PSObject.Properties.Name) -WithExit ) }
 
     if (-not $PathKey) {
         Write-Host "Key not found."
+        return
+    }
+
+    if ($PathKey -eq 'Exit') {
+        Write-Host
         return
     }
 
