@@ -1,4 +1,5 @@
 $Config = Use-Config
+
 $ORConfig = $Config.Data.OR
 $MenuTextColor = $Config.Data.UserSettings.Colors.MenuText
 $LLMTextColor = $Config.Data.UserSettings.Colors.LLMText

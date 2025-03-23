@@ -11,8 +11,7 @@
 
 ### OR
 
-- An OpenRouter-compatible client to initiate sessions with a model-id of your choosing.
-- Requires apikey and a current model to run.
+- An OpenRouter-compatible client to run chat sessions.
 
 ### Edit
 
