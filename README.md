@@ -13,6 +13,10 @@
 
 - An OpenRouter-compatible client to run chat sessions.
 
+### Note
+
+- A system for printing quick personal notes.
+
 ### Edit
 
 - Open directory in VSCode.

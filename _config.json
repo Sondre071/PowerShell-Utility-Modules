@@ -22,6 +22,21 @@
     "ApiKey": "",
     "ApiUrl": "https://openrouter.ai/api/v1/chat/completions"
   },
+  "Note": {
+    "Categories": {
+      "PowerShell": {
+        "Create new file and open": [
+          "New-Item -ItemType File -Path ./Folder/File.ps1 -Force | ForEach-Object { code $_ }"
+        ]
+      },
+      "Vim": {
+        "Paste different registers": [
+          "Check register: :reg",
+          "Paste register: \" 0 p, for the 0th entry"
+        ]
+      }
+    }
+  },
   "Run": {
     "Paths": {}
   },
