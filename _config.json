@@ -33,6 +33,10 @@
         "Paste different registers": [
           "Check register: :reg",
           "Paste register: \" 0 p, for the 0th entry"
+        ],
+        "Ignore casing for /search": [
+          "Ignore case: :set ic",
+          "Require case: :set noic"
         ]
       }
     }
