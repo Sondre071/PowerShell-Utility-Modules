@@ -1,7 +1,7 @@
 [PSObject]$Config = Use-Config
 [PSObject]$NotesConfig = $Config.Data.Note
 
-$NoteColor = $Config.Data.UserSettings.Colors.Note
+$NoteColor = $Config.Data.UserSettings.Colors.NoteText
 
 function Note($Parameter) {
     if (-not $NotesConfig.Categories.PSObject.Properties.Length) {
