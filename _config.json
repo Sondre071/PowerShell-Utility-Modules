@@ -24,6 +24,9 @@
   },
   "Note": {
     "Categories": {
+      "GitHub": {
+        "Open repo on the web": ["gh repo view --web myAccount/myRepo"]
+      },
       "PowerShell": {
         "Create new file and open": [
           "New-Item -ItemType File -Path ./Folder/File.ps1 -Force | ForEach-Object { code $_ }"
