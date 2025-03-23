@@ -41,7 +41,7 @@ function Note($Parameter) {
 
     Write-Host
 
-    $Note | ForEach-Object { Write-Host " $($_)" -ForegroundColor $NoteColor }
+    $Note | ForEach-Object { Write-Host $($_) -ForegroundColor $NoteColor }
 
     Write-Host
 
