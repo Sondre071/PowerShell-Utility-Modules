@@ -63,6 +63,7 @@
   "UserSettings": {
     "Colors": {
       "MenuText": "Yellow",
+      "Note": "White",
       "LLMText": "Cyan"
     }
   }
