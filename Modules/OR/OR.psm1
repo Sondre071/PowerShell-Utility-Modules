@@ -2,18 +2,19 @@ $Config = Use-Config
 $ORConfig = $Config.Data.OR
 $MenuTextColor = $Config.Data.UserSettings.Colors.MenuText
 $LLMTextColor = $Config.Data.UserSettings.Colors.LLMText
+
 $MessageHistory = [System.Collections.Generic.List[PSObject]]::new()
 
 function OR() {
-    $Action = Read-Menu -Options @('New session', 'Model') -WithExit
+    $Action = Read-Menu -Options @('New session', 'Model') -SkipSorting -WithExit
 
     switch ($Action) {
         'New session' {
 
-            Write-Host `n"Choose a prompt" -ForegroundColor $MenuTextColor 
+            Write-Host `n"Choose a prompt" -ForegroundColor $MenuTextColor
 
             $PromptKeys = $ORConfig.Prompts.PSObject.Properties.Name
-            $PromptKey = Read-Menu -FirstOptions @('None') -Options $PromptKeys -LastOptions @('Create new prompt')
+            $PromptKey = Read-Menu -FirstOptions @('None') -Options $PromptKeys -LastOptions @('- Create new prompt -')
 
             $SystemPrompt = ""
 
@@ -72,7 +73,6 @@ function New-Session($SystemPrompt) {
 }
 
 function New-Stream($UserInput, $SystemPrompt, $HttpClient) {
-
     $Messages = @()
 
     if ($SystemPrompt) {
@@ -113,7 +113,6 @@ function New-Stream($UserInput, $SystemPrompt, $HttpClient) {
 }
 
 function Read-Stream($Stream) {
-
     $Reader = [System.IO.StreamReader]::new($Stream)
 
     $ModelResponse = ""

@@ -9,10 +9,14 @@ function Read-Menu {
 
         [string[]]$LastOptions,
 
+        [switch]$SkipSorting,
+
         [switch]$WithExit
     )
 
-    $Options = $Options | Sort-Object
+    if (-not $SkipSorting) {
+        $Options = $Options | Sort-Object
+    }
 
     if ($FirstOptions) { $Options = $FirstOptions + $Options }
     if ($LastOptions) { $Options += $LastOptions }
