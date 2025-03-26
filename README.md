@@ -5,7 +5,7 @@
 ## Installation
 
 - Clone the repo and add the `Modules` folder to your PSModulePath environment variable.
-- Open _config.json and fill out the fields for each respective module you wish to use.
+- Open _config.json and fill out fields for each respective module you wish to use.
 - Rename _config.json to config.json to enable it.
 
 ## Modules
