@@ -25,6 +25,7 @@
   "Note": {
     "Categories": {
       "GitHub": {
+        "Create PR": ["gh pr create --web"],
         "Open repo on the web": ["gh repo view --web myAccount/myRepo"]
       },
       "PowerShell": {
@@ -33,14 +34,19 @@
         ]
       },
       "Vim": {
+        "Ignore casing for /search": [
+          "Ignore case: :set ic",
+          "Require case: :set noic"
+        ],
         "Paste different registers": [
           "Check register: :reg",
           "Paste register: \" 0 p, for the 0th entry"
         ],
-        "Ignore casing for /search": [
-          "Ignore case: :set ic",
-          "Require case: :set noic"
-        ]
+        "Registers": [
+          "Yank into system register: \" + y",
+          "Paste from system register: \" + p"
+        ],
+        "Search and replace": ["%s/oldword/newword/gc"]
       }
     }
   },
@@ -56,6 +62,7 @@
       "ChatGPT": "https://chat.com/",
       "Kode24": "https://kode24.no/",
       "OpenRouter": "https://openrouter.ai/",
+      "PowerShell style guide": "https://learn.microsoft.com/en-us/powershell/scripting/community/contributing/powershell-style-guide",
       "Youtube: Home": "https://www.youtube.com/",
       "Youtube: Watch later": "https://www.youtube.com/playlist?list=WL"
     }
